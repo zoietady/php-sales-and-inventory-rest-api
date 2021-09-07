@@ -34,7 +34,7 @@ const refreshTokens = data.refershTokens;
         "password" : "testP"
     }
 */
-router.post('/register',async (req, res)=>{
+router.post('/register', [authMiddleware.authenticateToken, authMiddleware.authenticateAdminToken] ,async (req, res)=>{
     try{
         /* generate encryption salt */
         const salt = await bcrypt.genSalt();
@@ -43,13 +43,15 @@ router.post('/register',async (req, res)=>{
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         /* parse user details */
-        const user = { username: req.body.username,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
+        const user = { 
+            user_id: req.body.user_id,
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
             admin: req.body.admin,
             password: hashedPassword
         };
-
+        
+        console.log("new user registered");
         console.log(user);
 
         /* store user */
@@ -57,6 +59,7 @@ router.post('/register',async (req, res)=>{
 
         /* send status */
         res.status(201).send("success");
+
     } catch{
         /* send 500 for failed process */
         res.status(500).send("error in registration");
@@ -66,7 +69,9 @@ router.post('/register',async (req, res)=>{
 /* login user */
 router.post('/login', async (req, res) => {
     /* look for user in database */
-    const user = users.find(user => user.username === req.body.username)
+    const user = users.find(user => user.user_id === req.body.user_id);
+    
+    
 
     /* if user is not registered return 400 */
     if (user == null) {
@@ -78,11 +83,11 @@ router.post('/login', async (req, res) => {
         if(await bcrypt.compare(req.body.password, user.password)) {
             /* if user is found return JWT */
             /* construct sign basis */
-            const userSigniture = { username: user.username, admin: user.admin };
-
+            const userSigniture = { user_id: user.user_id, admin: user.admin };
+            
             /* sign access token */
             const accessToken = authMiddleware.generateAccessToken(userSigniture);
-
+            
             /* sign refresh token */
             const refreshToken = authMiddleware.generateRefreshToken(userSigniture);
 
@@ -90,7 +95,7 @@ router.post('/login', async (req, res) => {
             refreshTokens.push(refreshToken);
 
             /* send json response containing token */
-            res.json({ accessToken: accessToken, refreshToken: refreshToken, admin: user.admin });
+            res.json({ accessToken: accessToken, refreshToken: refreshToken, admin: user.admin, expires_in: "15min" });
 
         } else {
 
@@ -116,7 +121,6 @@ router.post('/token', (req,res) => {
     /* collect access token */
     const refreshToken = req.body.token;
     
-
     /* check if token was retrieved */
     if (refreshToken == null) return res.sendStatus(401);
 
@@ -129,7 +133,7 @@ router.post('/token', (req,res) => {
         if (err) return res.sendStatus(403);
 
         /* verify token */
-        const accessToken = authMiddleware.generateAccessToken({ name: user.name });
+        const accessToken = authMiddleware.generateAccessToken({ user_id: user.user_id });
 
         /* send new token */
         res.json({ accessToken: accessToken })

@@ -2,14 +2,15 @@ get http://localhost:3000/users
 
 ###
 post http://localhost:3000/auth/register
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMxMDMzODIyLCJleHAiOjE2MzEwMzQ3MjJ9.1qvm9z_OpZMOcsJFWSFtmObKU7NaMlZXHpYtjxg6eqk
 Content-Type: application/json
 
 {
-    "username" : "username",
-    "firstName" : "user",
-    "lastName" : "name",
-    "admin" : true,
-    "password" : "password"
+    "user_id": 3,
+    "firstName": "test",
+    "lastName": "user",
+    "admin": false,
+    "password": "password"
 }
 
 ###
@@ -17,7 +18,7 @@ post http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "username" : "admin",
+    "user_id" : 1,
     "password" : "password"
 }
 
@@ -26,9 +27,22 @@ post http://localhost:3000/auth/token
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiYWRtaW4iOnRydWUsImlhdCI6MTYzMDg4MDgwOX0.GPmKIVBwvjPy9MDCjmmsMSg_Bne1EqOMAxtz4ty9WEs"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMxMDMzNDAyfQ.Wh84g3rMt348QQ8K5GCe-n0Wrai42IRvFJhYjcJjQ-s"
 }
 
 ###
 get http://localhost:3000/admin
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiYWRtaW4iOnRydWUsImlhdCI6MTYzMDgxMzAzNCwiZXhwIjoxNjMwODEzOTM0fQ.rdNePc_uA_4Xqnubu0CaDokqB7UEqn7mRV967dIu5Mk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTYzMTAzMzg0MiwiZXhwIjoxNjMxMDM0NzQyfQ.hpr0uCw-lsrAY-28bYDyYVf4IqT_C4FthHY8zkyuloE
+
+###
+get http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTYzMTAzMzg0MiwiZXhwIjoxNjMxMDM0NzQyfQ.hpr0uCw-lsrAY-28bYDyYVf4IqT_C4FthHY8zkyuloE
+
+###
+get http://localhost:3000/sales
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTYzMTAzMzg0MiwiZXhwIjoxNjMxMDM0NzQyfQ.hpr0uCw-lsrAY-28bYDyYVf4IqT_C4FthHY8zkyuloE
+
+###
+get http://localhost:3000/inventory
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTYzMTAzMzg0MiwiZXhwIjoxNjMxMDM0NzQyfQ.hpr0uCw-lsrAY-28bYDyYVf4IqT_C4FthHY8zkyuloE
+

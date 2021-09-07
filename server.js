@@ -17,8 +17,8 @@ const salesRouter = require('./routes/sales');
 app.use('/auth',authRouter);
 app.use('/users',userRouter);
 app.use('/admin',adminRouter);
-// app.use('/inventory',inventoryRouter);
-// app.use('/sales',salesRouter);
+app.use('/inventory',inventoryRouter);
+app.use('/sales',salesRouter);
 
 
 app.listen(3000, () => console.log(`server started`))

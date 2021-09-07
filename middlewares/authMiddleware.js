@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 module.exports = {
     generateAccessToken: function (user) {
         /* sign access token */
+        
         return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15min' });
     },
     generateRefreshToken: function (user) {
@@ -21,7 +22,7 @@ module.exports = {
         /* decrypt and verify token */
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
             /* log error if any*/
-            if (err) return console.log(err);
+            if (err) console.log(err);
 
             /* decrypt and verify token */
             if (err) return res.sendStatus(403);

@@ -19,7 +19,7 @@ router.get('/', [authMiddleware.authenticateToken, authMiddleware.authenticateAd
 
 //get one admin
 router.get('/:id', (req, res)=>{
-    res.send('all users route');
+    res.send('route to single admin');
 })
 
 //edit one admin

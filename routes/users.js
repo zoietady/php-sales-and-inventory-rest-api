@@ -4,9 +4,13 @@ const router = express.Router();
 /* import auth middlewares */
 const authMiddleware = require("../middlewares/authMiddleware");
 
+/* in memory data storage */
+const data = require("../data.js");
+const users = data.users;
+
 /* get all user (admin restricted) */
 router.get('/', [authMiddleware.authenticateToken, authMiddleware.authenticateAdminToken],(req, res)=>{
-    res.send('all users route');
+    res.send(users);
 });
 
 /* get a user (user restricted) */
