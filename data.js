@@ -1,5 +1,6 @@
 var sales = [
     {
+        "sales_id": 1,
         "date_time": "2021-01-20", 
         "product_id": 00000,
         "product_name": "test product 1",
@@ -8,6 +9,7 @@ var sales = [
         "product_sales_value": 5000
     },
     {
+        "sales_id": 2,
         "date_time": "2021-01-21", 
         "product_id": 99999,
         "product_name": "test product 2",

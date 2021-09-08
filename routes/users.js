@@ -9,21 +9,20 @@ const data = require("../data.js");
 const users = data.users;
 
 /* get all user (admin restricted) */
-router.get('/', [authMiddleware.authenticateToken, authMiddleware.authenticateAdminToken],(req, res)=>{
-    res.send(users);
+router.get('/', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken],(req, res)=>{
+    res.json(users);
 });
 
-/* get a user (user restricted) */
+/* get a user, get self is user restricted, get other user is admin restricted */
 router.get('/:id', (req, res)=>{
-    res.send('all users route');
+    let user = users.find( user => user.user_id === parseInt(req.params.id));
+    if (user == null) {
+        return res.status(404).json({ message: 'Cannot find subscriber' })
+    }
+    res.json(user).status(200);
 });
 
-/* update this user (user restricted) */
-router.patch('/:id', (req, res)=>{
-    
-});
-
-/* update a user (user restricted) */
+/* update user is self or admin restricted */
 router.patch('/:id', (req, res)=>{
     
 });
@@ -32,5 +31,6 @@ router.patch('/:id', (req, res)=>{
 router.delete('/:id', (req, res)=>{
 
 });
+
 
 module.exports = router;

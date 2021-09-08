@@ -16,7 +16,7 @@ const data = require("../data.js");
 const users = data.users;
 
 /* temporary refresh tokens container */
-const refreshTokens = data.refershTokens;
+let refreshTokens = data.refershTokens;
 
 /* register a new user */
 /* req contains user credentials
@@ -34,7 +34,7 @@ const refreshTokens = data.refershTokens;
         "password" : "testP"
     }
 */
-router.post('/register', [authMiddleware.authenticateToken, authMiddleware.authenticateAdminToken] ,async (req, res)=>{
+router.post('/register', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken] ,async (req, res)=>{
     try{
         /* generate encryption salt */
         const salt = await bcrypt.genSalt();
@@ -71,8 +71,6 @@ router.post('/login', async (req, res) => {
     /* look for user in database */
     const user = users.find(user => user.user_id === req.body.user_id);
     
-    
-
     /* if user is not registered return 400 */
     if (user == null) {
         return res.status(400).send('cannot find user')
@@ -95,7 +93,10 @@ router.post('/login', async (req, res) => {
             refreshTokens.push(refreshToken);
 
             /* send json response containing token */
-            res.json({ accessToken: accessToken, refreshToken: refreshToken, admin: user.admin, expires_in: "15min" });
+            res.cookie("access_token", accessToken,{httpOnly: true})
+                .cookie("refresh_token", refreshToken, {httpOnly: true})
+                .json({ user_id: user.user_id,admin: user.admin, expires_in: "15min" })
+                .status(200);
 
         } else {
 
@@ -109,17 +110,17 @@ router.post('/login', async (req, res) => {
 });
 
 /* logout user */
-router.delete('/logout', (req, res) => {
-    /* delete refres*/
+router.delete('/logout', authMiddleware.authenticateTokenCookie,(req, res) => {
+    /* delete refresh token*/
     refreshTokens = refreshTokens.filter(token => token !== req.body.token);
-    res.sendStatus(204);
+    res.clearCookie("access_token").clearCookie("refresh_token").json({ message: "logged out" }).status(200);
 });
 
 
 /* refresh access token user */
 router.post('/token', (req,res) => {
     /* collect access token */
-    const refreshToken = req.body.token;
+    const refreshToken = req.cookies.refresh_token;
     
     /* check if token was retrieved */
     if (refreshToken == null) return res.sendStatus(401);
@@ -132,11 +133,17 @@ router.post('/token', (req,res) => {
         /* if verification fails */
         if (err) return res.sendStatus(403);
 
+        const userSigniture = { user_id: user.user_id, admin: user.admin };
+
         /* verify token */
-        const accessToken = authMiddleware.generateAccessToken({ user_id: user.user_id });
+        const accessToken = authMiddleware.generateAccessToken(userSigniture);
 
         /* send new token */
-        res.json({ accessToken: accessToken })
+        /* send json response containing token */
+        res.cookie("access_token", accessToken,{httpOnly: true})
+        .cookie("refresh_token", refreshToken, {httpOnly: true})
+        .json({ user_id: user.user_id,admin: user.admin, expires_in: "15min" })
+        .status(200);
     });
 });
 

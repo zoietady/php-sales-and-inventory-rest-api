@@ -13,13 +13,14 @@ const data = require("../data.js");
 const users = data.users.filter( user => user.admin === true);
 
 //get all admin
-router.get('/', [authMiddleware.authenticateToken, authMiddleware.authenticateAdminToken],(req, res)=>{
-    res.json(users);
+router.get('/', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken],(req, res)=>{
+    res.json(users).status(200);
 })
 
-//get one admin
-router.get('/:id', (req, res)=>{
-    res.send('route to single admin');
+//get one specific admin
+router.get('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], (req, res)=>{
+    let admin = users.find( user => user.user_id === req.params.id);
+    res.json(admin).status(200);
 })
 
 //edit one admin
