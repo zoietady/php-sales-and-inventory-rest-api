@@ -8,6 +8,35 @@ const authMiddleware = require("../middlewares/authMiddleware");
 let data = require("../data.js");
 let inventory = data.inventory;
 
+/* add inventory record */
+router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
+    try{
+        /* parse sales details */
+        const inventory_record = { 
+            product_id: req.body.product_id,
+            product_name: req.body.product_name,
+            product_group: req.body.product_group,
+            max_stock_capacity: req.body.max_stock_capacity,
+            current_stock: req.body.current_stock,
+            product_description: req.body.product_description,
+            product_price: req.body.product_price
+        };
+        
+        console.log("new user registered");
+        console.log(inventory_record);
+
+        /* store sales record */
+        inventory.push(inventory_record);
+
+        /* send status */
+        return res.status(201).send("success");
+
+    } catch{
+        /* send 500 for failed process */
+        return res.status(500).send("error in adding record");
+    };
+});
+
 /* get all inventory*/
 router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
     res.json(inventory).status(200);
@@ -27,7 +56,7 @@ router.get('/:id',[authMiddleware.authenticateTokenCookie], (req, res)=>{
     res.json(inventory_record).status(200);
 });
 
-/* delete a user (admin restricted) */
+/* delete a inventory record */
 router.delete('/:id', [authMiddleware.authenticateTokenCookie],(req, res)=>{
     /* check if inventory record exists */
     /* if inevntory record is found delete*/

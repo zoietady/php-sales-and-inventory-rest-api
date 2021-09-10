@@ -8,6 +8,34 @@ const authMiddleware = require("../middlewares/authMiddleware");
 let data = require("../data.js");
 let sales = data.sales;
 
+router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
+    try{
+        /* parse sales details */
+        const sale = { 
+            sales_id: req.body.sales_id,
+            date_time: req.body.date_time,
+            product_id: req.body.product_id,
+            product_name: req.body.product_name,
+            product_group: req.body.product_group,
+            quantity_sold: req.body.quantity_sold,
+            product_sales_value: req.body.product_sales_value
+        };
+        
+        console.log("new user registered");
+        console.log(sale);
+
+        /* store sales record */
+        sales.push(sale);
+
+        /* send status */
+        return res.status(201).send("success");
+
+    } catch{
+        /* send 500 for failed process */
+        return res.status(500).send("error in adding record");
+    };
+});
+
 /* get all sales*/
 router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
     res.json(sales).status(200);

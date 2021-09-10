@@ -2,7 +2,7 @@ var sales = [
     {
         "sales_id": 1,
         "date_time": "2021-01-20", 
-        "product_id": 00000,
+        "product_id": 0,
         "product_name": "test product 1",
         "product_group": "product group 1",
         "quantity_sold": 50,
@@ -20,7 +20,7 @@ var sales = [
 ];
 var inventory = [
     {
-        "product_id": 00000,
+        "product_id": 0,
         "product_name": "test product 1",
         "product_group": "product group 1",
         "max_stock_capacity": 100,

@@ -12,6 +12,7 @@ Content-Type: application/json
     "password": "password"
 }
 
+//old request format (naked token)
 ###
 post http://localhost:3000/auth/register
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMxMDMzODIyLCJleHAiOjE2MzEwMzQ3MjJ9.1qvm9z_OpZMOcsJFWSFtmObKU7NaMlZXHpYtjxg6eqk
@@ -25,6 +26,7 @@ Content-Type: application/json
     "password": "password"
 }
 
+//new request format (in cookie token)
 ###
 post http://localhost:3000/auth/login
 Content-Type: application/json
@@ -41,13 +43,45 @@ delete http://localhost:3000/auth/logout
 post http://localhost:3000/auth/token
 
 ###
+post http://localhost:3000/sales/
+Content-Type: application/json
+
+{
+    "sales_id": 3,
+    "date_time": "2021-01-20", 
+    "product_id": 0,
+    "product_name": "test product 1",
+    "product_group": "product group 1",
+    "quantity_sold": 50,
+    "product_sales_value": 5000
+}
+
+###
+post http://localhost:3000/inventory/
+Content-Type: application/json
+
+{
+    "product_id": 2,
+    "product_name": "test product 1",
+    "product_group": "product group 1",
+    "max_stock_capacity": 100,
+    "current_stock": 50,
+    "product_description":"just a test product that is number 1",
+    "product_price": 12.99
+}
+
+
+###
 get http://localhost:3000/admin
 
 ###
 get http://localhost:3000/users/3
 
 ###
-get http://localhost:3000/sales/1
+get http://localhost:3000/sales/
+
+###
+get http://localhost:3000/inventory/
 
 ###
 delete http://localhost:3000/sales/1
