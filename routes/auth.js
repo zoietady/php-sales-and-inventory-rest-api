@@ -10,10 +10,10 @@ const jwt = require('jsonwebtoken');
 const authMiddleware = require("../middlewares/authMiddleware");
 
 /* in memory data storage */
-const data = require("../data.js");
+let data = require("../data.js");
 
 /* temporary users container */
-const users = data.users;
+let users = data.users;
 
 /* temporary refresh tokens container */
 let refreshTokens = data.refershTokens;
@@ -58,22 +58,22 @@ router.post('/register', [authMiddleware.authenticateTokenCookie, authMiddleware
         users.push(user);
 
         /* send status */
-        res.status(201).send("success");
+        return res.status(201).send("success");
 
     } catch{
         /* send 500 for failed process */
-        res.status(500).send("error in registration");
+        return res.status(500).send("error in registration");
     };
 });
 
 /* login user */
 router.post('/login', async (req, res) => {
     /* look for user in database */
-    const user = users.find(user => user.user_id === req.body.user_id);
+    const user = users.find(user => user.user_id === parseInt(req.body.user_id));
     
     /* if user is not registered return 400 */
     if (user == null) {
-        return res.status(400).send('cannot find user')
+        return res.status(404).send('cannot find user')
     }
 
     /* if found try decrypting password */

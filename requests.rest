@@ -44,10 +44,13 @@ post http://localhost:3000/auth/token
 get http://localhost:3000/admin
 
 ###
-get http://localhost:3000/users/2
+get http://localhost:3000/users/3
 
 ###
 get http://localhost:3000/sales/1
+
+###
+delete http://localhost:3000/sales/1
 
 ###
 get http://localhost:3000/inventory/00000

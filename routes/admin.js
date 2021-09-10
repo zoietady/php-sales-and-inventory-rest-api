@@ -8,9 +8,8 @@ const bcrypt = require('bcrypt');
 const authMiddleware = require("../middlewares/authMiddleware");
 
 /* in memory data storage */
-const data = require("../data.js");
-
-const users = data.users.filter( user => user.admin === true);
+let data = require("../data.js");
+let users = data.users.filter( user => user.admin === true);
 
 //get all admin
 router.get('/', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken],(req, res)=>{

@@ -5,8 +5,8 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 
 /* in memory data storage */
-const data = require("../data.js");
-const users = data.users;
+let data = require("../data.js");
+let users = data.users;
 
 /* get all user (admin restricted) */
 router.get('/', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken],(req, res)=>{
@@ -14,11 +14,16 @@ router.get('/', [authMiddleware.authenticateTokenCookie, authMiddleware.authenti
 });
 
 /* get a user, get self is user restricted, get other user is admin restricted */
-router.get('/:id', (req, res)=>{
+router.get('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.authenticateSelfRequest], (req, res)=>{
+    /* get user of particular ID */
     let user = users.find( user => user.user_id === parseInt(req.params.id));
+
+    /* if null return 404 */
     if (user == null) {
-        return res.status(404).json({ message: 'Cannot find subscriber' })
+        return res.status(404).json({ message: 'Cannot find user' })
     }
+
+    /* otherwise return 200 */
     res.json(user).status(200);
 });
 
@@ -28,7 +33,17 @@ router.patch('/:id', (req, res)=>{
 });
 
 /* delete a user (admin restricted) */
-router.delete('/:id', (req, res)=>{
+router.delete('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken],(req, res)=>{
+
+    /* check if user exists */
+    /* if user is found delete*/
+    if (users.filter(user => sale.user_id == parseInt(req.params.id))) {
+        users = uerse.filter((user => user.user_id !== parseInt(req.params.id)));
+        return res.json({message:"user deleted"}).status(200); 
+    }
+
+    /* otherwise send 404*/
+    return res.status(404).json({ message: 'Cannot find user' });
 
 });
 
