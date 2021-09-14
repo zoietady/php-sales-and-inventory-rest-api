@@ -9,6 +9,11 @@ const jwt = require('jsonwebtoken');
 /* import custom middlewares */
 const authMiddleware = require("../middlewares/authMiddleware");
 
+/* import user model */
+const User = require("../models/UserModel.js");
+
+const connection = require("../models/db.js");
+
 /* in memory data storage */
 let data = require("../data.js");
 
@@ -35,6 +40,12 @@ let refreshTokens = data.refershTokens;
     }
 */
 router.post('/register', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken] ,async (req, res)=>{
+
+    /* check for body content */
+    if (!req.body) {
+        return res.status(400).send({ message: "Content can not be empty!"});
+    }
+
     try{
         /* generate encryption salt */
         const salt = await bcrypt.genSalt();
@@ -50,26 +61,32 @@ router.post('/register', [authMiddleware.authenticateTokenCookie, authMiddleware
             admin: req.body.admin,
             password: hashedPassword
         };
-        
-        console.log("new user registered");
-        console.log(user);
 
         /* store user */
         users.push(user);
 
-        /* send status */
-        return res.status(201).send("success");
+        /* save user to database */
+        User.create(user, (err, data) => {
+            /* check for errors */
+            if (err) return res.status(500).send({ message: err.message || "Internal server error"});
+
+            /*if good, send 200 with user */
+            else return res.status(200).send(data);
+        });
 
     } catch{
         /* send 500 for failed process */
         return res.status(500).send("error in registration");
     };
+    
 });
 
 /* login user */
-router.post('/login', async (req, res) => {
-    /* look for user in database */
-    const user = users.find(user => user.user_id === parseInt(req.body.user_id));
+router.post('/login',async (req, res) => {
+    let queryString = 'SELECT * FROM authenticationTable WHERE user_id = ?';
+    const queryResult = await new Promise(resolve => connection.query(queryString, req.body.user_id, (error, result) => resolve(result)));
+
+    let user = queryResult[0];
     
     /* if user is not registered return 400 */
     if (user == null) {

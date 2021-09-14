@@ -5,10 +5,10 @@ post http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "user_id": 3,
-    "firstName": "test",
-    "lastName": "user",
-    "admin": false,
+    "user_id": 4,
+    "first_name": "test",
+    "last_name": "user",
+    "admin": true,
     "password": "password"
 }
 
@@ -72,10 +72,22 @@ Content-Type: application/json
 
 
 ###
-get http://localhost:3000/admin
+get http://localhost:3000/products
 
 ###
-get http://localhost:3000/users/3
+get http://localhost:3000/users/
+
+###
+patch http://localhost:3000/products/2
+Content-Type: application/json
+
+{
+    "product_id": 2,
+    "product_name": "MedicineTest1",
+    "product_group": "MedicineGroupTest1",
+    "product_description": "This is medicine",
+    "product_price": 10.99
+}
 
 ###
 get http://localhost:3000/sales/
@@ -84,7 +96,7 @@ get http://localhost:3000/sales/
 get http://localhost:3000/inventory/
 
 ###
-delete http://localhost:3000/sales/1
+delete http://localhost:3000/products/2
 
 ###
 get http://localhost:3000/inventory/00000

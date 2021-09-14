@@ -8,66 +8,103 @@ const authMiddleware = require("../middlewares/authMiddleware");
 let data = require("../data.js");
 let inventory = data.inventory;
 
-/* add inventory record */
+/* import user model */
+const Inventory = require("../models/InventoryModel.js");
+
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
+    Inventory.getAll((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Inventorys."
+          });
+        else res.send(data);
+    });
+});
+
+/* get all sales*/
+router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
+    Inventory.getAll((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Inventorys."
+          });
+        else res.send(data);
+    });
+});
+
+/* update a sales record (user restricted) */
+router.get('/:id', [authMiddleware.authenticateTokenCookie], (req, res)=>{
+    Inventory.findById(req.params.id, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found Inventory with id ${req.params.id}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving Inventory with id " + req.params.id
+                });
+            }
+        } else res.send(data);
+    });
+});
+
+/* delete a sales record (admin restricted) */
+router.delete('/:id', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], (req, res)=>{
+   
+    Inventory.remove(req.params.id, (err, data) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              message: `Not found Inventory with id ${req.params.id}.`
+            });
+          } else {
+            res.status(500).send({
+              message: "Could not delete Inventory with id " + req.params.id
+            });
+          }
+        } else res.send({ message: `Inventory was deleted successfully!` });
+    });
+});
+
+/* update user is self or admin restricted */
+router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], async (req, res)=>{
+    
+    /* check for body content */
+    if (!req.body) {
+        return res.status(400).send({ message: "Content can not be empty!"});
+    }
+
     try{
-        /* parse sales details */
-        const inventory_record = { 
+        /* parse user details */
+        const Inventory = { 
+            update_index: req.body.update_index,
             product_id: req.body.product_id,
-            product_name: req.body.product_name,
-            product_group: req.body.product_group,
-            max_stock_capacity: req.body.max_stock_capacity,
             current_stock: req.body.current_stock,
-            product_description: req.body.product_description,
-            product_price: req.body.product_price
+            max_stock_capacity: req.body.max_stock_capacity,
+            date_time: req.body.date_time
         };
-        
-        console.log("new user registered");
-        console.log(inventory_record);
 
-        /* store sales record */
-        inventory.push(inventory_record);
-
-        /* send status */
-        return res.status(201).send("success");
-
+        Inventory.updateById(req.params.id,new Inventory(Inventory),(err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found Inventory with id ${req.params.id}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating Inventory with id " + req.params.id
+                        });
+                    }
+                } else res.send(data);
+            }
+        );
     } catch{
         /* send 500 for failed process */
-        return res.status(500).send("error in adding record");
+        return res.status(500).send("error in registration");
     };
-});
-
-/* get all inventory*/
-router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
-    res.json(inventory).status(200);
-});
-
-/* update a inventory record (user restricted) */
-router.get('/:id',[authMiddleware.authenticateTokenCookie], (req, res)=>{
-    /* get inventory details of said product*/
-    let inventory_record = inventory.find( product => product.product_id === parseInt(req.params.id));
-
-    /* if null return 404 */
-    if (inventory_record == null) {
-        return res.status(404).json({ message: 'Cannot find inventory details' })
-    }
-
-    /* else return 200 */
-    res.json(inventory_record).status(200);
-});
-
-/* delete a inventory record */
-router.delete('/:id', [authMiddleware.authenticateTokenCookie],(req, res)=>{
-    /* check if inventory record exists */
-    /* if inevntory record is found delete*/
-    if (inventory.filter(product => product.product_id == parseInt(req.params.id))) {
-        product = product.filter((product => product.product_id !== parseInt(req.params.id)));
-        return res.json({message:"item deleted"}).status(200); 
-    }
-
-    /* otherwise send 404*/
-    return res.status(404).json({ message: 'Cannot find inventory record' });
-
 });
 
 module.exports = router;

@@ -5,18 +5,18 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 
 /* import user model */
-const Sales = require("../models/SalesModel.js");
+const Product = require("../models/ProductModel.js");
 
 /* in memory data storage */
 let data = require("../data.js");
 let sales = data.sales;
 
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
-    Sales.getAll((err, data) => {
+    Product.getAll((err, data) => {
         if (err)
           res.status(500).send({
             message:
-              err.message || "Some error occurred while retrieving Saless."
+              err.message || "Some error occurred while retrieving products."
           });
         else res.send(data);
     });
@@ -24,11 +24,11 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
 
 /* get all sales*/
 router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
-    Sales.getAll((err, data) => {
+    Product.getAll((err, data) => {
         if (err)
           res.status(500).send({
             message:
-              err.message || "Some error occurred while retrieving Saless."
+              err.message || "Some error occurred while retrieving products."
           });
         else res.send(data);
     });
@@ -36,15 +36,15 @@ router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
 
 /* update a sales record (user restricted) */
 router.get('/:id', [authMiddleware.authenticateTokenCookie], (req, res)=>{
-    Sales.findById(req.params.id, (err, data) => {
+    Product.findById(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Sales with id ${req.params.id}.`
+                    message: `Not found product with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Sales with id " + req.params.id
+                    message: "Error retrieving product with id " + req.params.id
                 });
             }
         } else res.send(data);
@@ -54,18 +54,18 @@ router.get('/:id', [authMiddleware.authenticateTokenCookie], (req, res)=>{
 /* delete a sales record (admin restricted) */
 router.delete('/:id', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], (req, res)=>{
    
-    Sales.remove(req.params.id, (err, data) => {
+    Product.remove(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Not found Sales with id ${req.params.id}.`
+              message: `Not found product with id ${req.params.id}.`
             });
           } else {
             res.status(500).send({
-              message: "Could not delete Sales with id " + req.params.id
+              message: "Could not delete product with id " + req.params.id
             });
           }
-        } else res.send({ message: `Sales was deleted successfully!` });
+        } else res.send({ message: `product was deleted successfully!` });
     });
 });
 
@@ -79,23 +79,23 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
 
     try{
         /* parse user details */
-        const Sales = { 
-            sales_id: req.body.sales_id,
+        const product = { 
             product_id: req.body.product_id,
-            quantity_sold: req.body.quantity_sold,
-            date_time: req.body.date_time,
-            dispatched: req.body.dispatched
+            product_name: req.body.product_name,
+            product_group: req.body.product_group,
+            product_description: req.body.product_description,
+            product_price: req.body.product_price
         };
 
-        Sales.updateById(req.params.id,new Sales(Sales),(err, data) => {
+        Product.updateById(req.params.id,new Product(product),(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
-                            message: `Not found Sales with id ${req.params.id}.`
+                            message: `Not found product with id ${req.params.id}.`
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating Sales with id " + req.params.id
+                            message: "Error updating product with id " + req.params.id
                         });
                     }
                 } else res.send(data);

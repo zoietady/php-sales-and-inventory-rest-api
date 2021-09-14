@@ -5,72 +5,71 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 
 /* import user model */
-const Sales = require("../models/SalesModel.js");
+const Supplier = require("../models/SupplierModel.js");
 
 /* in memory data storage */
 let data = require("../data.js");
-let sales = data.sales;
 
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
-    Sales.getAll((err, data) => {
+    Supplier.getAll((err, data) => {
         if (err)
           res.status(500).send({
             message:
-              err.message || "Some error occurred while retrieving Saless."
+              err.message || "Some error occurred while retrieving Suppliers."
           });
         else res.send(data);
     });
 });
 
-/* get all sales*/
+/* get all Supplier*/
 router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
-    Sales.getAll((err, data) => {
+    Supplier.getAll((err, data) => {
         if (err)
           res.status(500).send({
             message:
-              err.message || "Some error occurred while retrieving Saless."
+              err.message || "Some error occurred while retrieving Suppliers."
           });
         else res.send(data);
     });
 });
 
-/* update a sales record (user restricted) */
+/* update a Supplier record (user restricted) */
 router.get('/:id', [authMiddleware.authenticateTokenCookie], (req, res)=>{
-    Sales.findById(req.params.id, (err, data) => {
+    Supplier.findById(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Sales with id ${req.params.id}.`
+                    message: `Not found Supplier with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Sales with id " + req.params.id
+                    message: "Error retrieving Supplier with id " + req.params.id
                 });
             }
         } else res.send(data);
     });
 });
 
-/* delete a sales record (admin restricted) */
+/* delete a Supplier record (admin restricted) */
 router.delete('/:id', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], (req, res)=>{
    
-    Sales.remove(req.params.id, (err, data) => {
+    Supplier.remove(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Not found Sales with id ${req.params.id}.`
+              message: `Not found Supplier with id ${req.params.id}.`
             });
           } else {
             res.status(500).send({
-              message: "Could not delete Sales with id " + req.params.id
+              message: "Could not delete Supplier with id " + req.params.id
             });
           }
-        } else res.send({ message: `Sales was deleted successfully!` });
+        } else res.send({ message: `Supplier was deleted successfully!` });
     });
 });
 
 /* update user is self or admin restricted */
-router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], async (req, res)=>{
+router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.authenticateSelfRequest], async (req, res)=>{
     
     /* check for body content */
     if (!req.body) {
@@ -79,23 +78,20 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
 
     try{
         /* parse user details */
-        const Sales = { 
-            sales_id: req.body.sales_id,
-            product_id: req.body.product_id,
-            quantity_sold: req.body.quantity_sold,
-            date_time: req.body.date_time,
-            dispatched: req.body.dispatched
+        const Supplier = { 
+            supplier_id: req.body.supplier_id,
+            supplier_name: req.body.supplier_name
         };
 
-        Sales.updateById(req.params.id,new Sales(Sales),(err, data) => {
+        Supplier.updateById(req.params.id,new Supplier(Supplier),(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
-                            message: `Not found Sales with id ${req.params.id}.`
+                            message: `Not found Supplier with id ${req.params.id}.`
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating Sales with id " + req.params.id
+                            message: "Error updating Supplier with id " + req.params.id
                         });
                     }
                 } else res.send(data);
