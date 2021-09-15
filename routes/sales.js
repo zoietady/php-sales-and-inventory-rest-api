@@ -12,14 +12,41 @@ let data = require("../data.js");
 let sales = data.sales;
 
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
-    Sales.getAll((err, data) => {
-        if (err)
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while retrieving Saless."
-          });
-        else res.send(data);
-    });
+    /* check for body content */
+    if (!req.body) {
+        return res.status(400).send({ message: "Content can not be empty!"});
+    }
+
+    try{
+        /* parse user details */
+        const sale = { 
+            sales_id: req.body.sales_id,
+            product_id: req.body.product_id,
+            quantity_sold: req.body.quantity_sold,
+            date_time: req.body.date_time,
+            dispatched: req.body.dispatched
+        };
+
+        console.log(sales);
+
+        Sales.create(new Sales(sale),(err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found Sales with id ${req.params.id}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating Sales with id " + req.params.id
+                        });
+                    }
+                } else res.send(data);
+            }
+        );
+    } catch{
+        /* send 500 for failed process */
+        return res.status(500).send("error in registration");
+    };
 });
 
 /* get all sales*/
@@ -79,7 +106,7 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
 
     try{
         /* parse user details */
-        const Sales = { 
+        const sale = { 
             sales_id: req.body.sales_id,
             product_id: req.body.product_id,
             quantity_sold: req.body.quantity_sold,
@@ -87,7 +114,10 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
             dispatched: req.body.dispatched
         };
 
-        Sales.updateById(req.params.id,new Sales(Sales),(err, data) => {
+        console.log(req.params.id);
+        console.log(sales);
+
+        Sales.updateById(req.params.id,new Sales(sale),(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({

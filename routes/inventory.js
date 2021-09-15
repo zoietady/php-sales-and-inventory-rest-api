@@ -12,14 +12,39 @@ let inventory = data.inventory;
 const Inventory = require("../models/InventoryModel.js");
 
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
-    Inventory.getAll((err, data) => {
-        if (err)
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while retrieving Inventorys."
-          });
-        else res.send(data);
-    });
+    /* check for body content */
+    if (!req.body) {
+        return res.status(400).send({ message: "Content can not be empty!"});
+    }
+
+    try{
+        /* parse user details */
+        const inventory = { 
+            update_index: req.body.update_index,
+            product_id: req.body.product_id,
+            current_stock: req.body.current_stock,
+            max_stock_capacity: req.body.max_stock_capacity,
+            date_time: req.body.date_time
+        };
+
+        Inventory.create(new Inventory(inventory),(err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found Inventory with id ${req.params.id}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating Inventory with id " + req.params.id
+                        });
+                    }
+                } else res.send(data);
+            }
+        );
+    } catch{
+        /* send 500 for failed process */
+        return res.status(500).send("error in registration");
+    };
 });
 
 /* get all sales*/
@@ -79,7 +104,7 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
 
     try{
         /* parse user details */
-        const Inventory = { 
+        const inventory = { 
             update_index: req.body.update_index,
             product_id: req.body.product_id,
             current_stock: req.body.current_stock,
@@ -87,7 +112,7 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
             date_time: req.body.date_time
         };
 
-        Inventory.updateById(req.params.id,new Inventory(Inventory),(err, data) => {
+        Inventory.updateById(req.params.id,new Inventory(inventory),(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({

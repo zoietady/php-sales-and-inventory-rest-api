@@ -15,8 +15,8 @@ const adminRouter = require('./routes/admin');
 const inventoryRouter = require('./routes/inventory');
 const salesRouter = require('./routes/sales');
 const productsRouter = require('./routes/products');
-const deliveryRouter = require('./routes/supplier');
-const supplierRouter = require('./routes/delivery');
+const supplierRouter = require('./routes/supplier');
+const deliveryRouter = require('./routes/delivery');
 
 
 app.use('/auth',authRouter);
@@ -25,8 +25,8 @@ app.use('/admin',adminRouter);
 app.use('/inventory',inventoryRouter);
 app.use('/sales',salesRouter);
 app.use('/products',productsRouter);
-app.use('/supplier',productsRouter);
-app.use('/delivery',productsRouter);
+app.use('/supplier',supplierRouter);
+app.use('/delivery',deliveryRouter);
 
 
 app.listen(3000, () => console.log(`server started`))

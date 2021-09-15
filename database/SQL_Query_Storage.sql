@@ -33,7 +33,7 @@ SELECT * FROM `recievingTable`;
     WHERE product_id = 1;
     /* Show deliveries by date (YYYY-MM-DD)*/
     SELECT * FROM `recievingTable` 
-    WHERE deliveryDate = "2021-09-12";
+    WHERE delivery_date = "2021-09-12";
 
 /* Show all orders */
 SELECT * FROM `salesOrderTable`;
@@ -91,9 +91,9 @@ SELECT * FROM `authenticationtable`
     /* Show users by password */
     SELECT * FROM `authenticationtable`
     WHERE password = "$2b$10$0ynj8tx05yxmrx6cFbhphOe1iKmxmrjOxR.Lw85IfI7wsQ.eDDf0G";
-    /* Show users by firstname */
+    /* Show users by first_name */
     SELECT * FROM `authenticationtable`
-    WHERE firstname = "admin";
+    WHERE first_name = "admin";
     /* Show users by lastname */
     SELECT * FROM `authenticationtable`
     WHERE lastname = "super";
@@ -107,10 +107,22 @@ SELECT * FROM `authenticationtable`
 /* Multi Table Query's: */
 
 /* Sales vs Inventory */
-SELECT productInformationTable.product_id, product_name, current_stock, quantity_sold, product_price, ROUND(quantity_sold * product_price, 2) AS 'Total Revenue'
+SELECT productInformationTable.product_id, product_name,productInventoryTable.date_time, current_stock, quantity_sold, product_price, ROUND(quantity_sold * product_price, 2) AS 'total_revenue'
 FROM productInformationTable, productInventoryTable, salesOrderTable
-WHERE productInformationTable.product_id = productInformationTable.product_id
-GROUP BY product_id
+WHERE productInformationTable.product_id = productInventoryTable.product_id
+GROUP BY product_id;
+
+/* Inventory + product */
+SELECT productInformationTable.*, update_index, current_stock,max_stock_capacity, date_time 
+FROM productInformationTable, productInventoryTable
+WHERE productInformationTable.product_id = productInventoryTable.product_id
+GROUP BY product_id;
+
+/* Sales + product */
+SELECT sales_id,productInformationTable.*,quantity_sold,date_time,dispatched, ROUND(quantity_sold * product_price, 2) AS 'total_revenue'
+FROM productInformationTable, salesOrderTable
+WHERE productInformationTable.product_id = salesOrderTable.product_id
+ORDER BY date_time;
 
 /* Select all products with current stock below 100 */
 SELECT productInformationTable.product_id, product_name, current_stock, recievingTable.product_price AS 'Delivery Price'
@@ -141,7 +153,7 @@ GROUP BY salesOrderTable.product_id
     INSERT INTO `productinformationtable` (`product_id`, `product_name`, `product_group`, `product_description`, `product_price`)
     VALUES (NULL, 'MedicineTest1', 'MedicineGroupTest1', 'This is medicine', '4.99');
     /* Insert new product inventory */
-    INSERT INTO `productinventorytable` (`updateIndex`, `product_id`, `current_stock`, `date_time`)
+    INSERT INTO `productinventorytable` (`update_index`, `product_id`, `current_stock`, `date_time`)
      VALUES (NULL, '2', '0', NULL);
     /* Insert new Sale */
     INSERT INTO `salesordertable` (`sales_id`, `product_id`, `quantity_sold`, `date_time`, `dispatched`) 
@@ -150,10 +162,10 @@ GROUP BY salesOrderTable.product_id
     INSERT INTO `supplierinformationtable` (`supplier_id`, `supplier_name`) 
     VALUES (NULL, 'SupplierTest1');
     /* Insert new delivery */
-    INSERT INTO `recievingtable` (`recivingID`, `supplier_id`, `product_id`, `deliveryDate`, `product_price`, `quantity`, `arrived`) 
+    INSERT INTO `recievingtable` (`recieving_id`, `supplier_id`, `product_id`, `delivery_date`, `product_price`, `quantity`, `arrived`) 
     VALUES (NULL, '1', '2', '2021-09-14', '1.25', '4000', '1');
     /* Insert new user */
-    INSERT INTO `authenticationtable` (`user_id`, `password`, `firstName`, `lastName`, `isAdmin`) 
+    INSERT INTO `authenticationtable` (`user_id`, `password`, `first_name`, `last_name`, `admin`) 
     VALUES (NULL, '$2b$10$0ynj8tx05yxmrx6cFbhphOe1iKmxmrjOxR.Lw85IfI7wsQ.eDDf0G', 'admin', 'super', '1');
 
 /* Update Query's: */
@@ -190,7 +202,7 @@ GROUP BY salesOrderTable.product_id
     UPDATE `recievingtable` SET `product_id` = '1' 
     WHERE `recievingtable`.`recivingID` = '2';
     /* Update delivery date */
-    UPDATE `recievingtable` SET `deliveryDate` = '2021-09-15' 
+    UPDATE `recievingtable` SET `delivery_date` = '2021-09-15' 
     WHERE `recievingtable`.`recivingID` = '2';
     /* Update delivery price */
     UPDATE `recievingtable` SET `product_price` = '5.00' 
@@ -240,8 +252,8 @@ GROUP BY salesOrderTable.product_id
     /* Update password */
     UPDATE `authenticationtable` SET `password` = '2b$10$0ynj8tx05yxmrx6cFbhphOe1iKmxmrjOxR.Lw85IfI7wsQ.eDDf0G' 
     WHERE `authenticationtable`.`user_id` = '1';
-    /* Update firstname */
-    UPDATE `authenticationtable` SET `firstName` = 'name' 
+    /* Update first_name */
+    UPDATE `authenticationtable` SET `first_name` = 'name' 
     WHERE `authenticationtable`.`user_id` = '1';
     /* Update lastname */
     UPDATE `authenticationtable` SET `lastName` = 'lastname' 

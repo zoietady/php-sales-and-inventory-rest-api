@@ -87,6 +87,8 @@ router.post('/login',async (req, res) => {
     const queryResult = await new Promise(resolve => connection.query(queryString, req.body.user_id, (error, result) => resolve(result)));
 
     let user = queryResult[0];
+
+    console.log(user);
     
     /* if user is not registered return 400 */
     if (user == null) {

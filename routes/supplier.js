@@ -11,14 +11,36 @@ const Supplier = require("../models/SupplierModel.js");
 let data = require("../data.js");
 
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
-    Supplier.getAll((err, data) => {
-        if (err)
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while retrieving Suppliers."
-          });
-        else res.send(data);
-    });
+    /* check for body content */
+    if (!req.body) {
+        return res.status(400).send({ message: "Content can not be empty!"});
+    }
+
+    try{
+        /* parse user details */
+        const supplier = { 
+            supplier_id: req.body.supplier_id,
+            supplier_name: req.body.supplier_name
+        };
+
+        Supplier.create(new Supplier(supplier),(err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found Supplier with id ${req.params.id}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating Supplier with id " + req.params.id
+                        });
+                    }
+                } else res.send(data);
+            }
+        );
+    } catch{
+        /* send 500 for failed process */
+        return res.status(500).send("error in registration");
+    };
 });
 
 /* get all Supplier*/
@@ -78,12 +100,12 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
 
     try{
         /* parse user details */
-        const Supplier = { 
+        const supplier = { 
             supplier_id: req.body.supplier_id,
             supplier_name: req.body.supplier_name
         };
 
-        Supplier.updateById(req.params.id,new Supplier(Supplier),(err, data) => {
+        Supplier.updateById(req.params.id,new Supplier(supplier),(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({

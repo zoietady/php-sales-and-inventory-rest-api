@@ -12,14 +12,39 @@ let data = require("../data.js");
 let sales = data.sales;
 
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
-    Product.getAll((err, data) => {
-        if (err)
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while retrieving products."
-          });
-        else res.send(data);
-    });
+    /* check for body content */
+    if (!req.body) {
+        return res.status(400).send({ message: "Content can not be empty!"});
+    }
+
+    try{
+        /* parse user details */
+        const product = { 
+            product_id: req.body.product_id,
+            product_name: req.body.product_name,
+            product_group: req.body.product_group,
+            product_description: req.body.product_description,
+            product_price: req.body.product_price
+        };
+
+        Product.create(new Product(product),(err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found product with id ${req.params.id}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating product with id " + req.params.id
+                        });
+                    }
+                } else res.send(data);
+            }
+        );
+    } catch{
+        /* send 500 for failed process */
+        return res.status(500).send("error in registration");
+    };
 });
 
 /* get all sales*/

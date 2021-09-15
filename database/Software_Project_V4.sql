@@ -26,15 +26,16 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `authenticationtable`
 --
+DROP TABLE IF EXISTS productinventorytable;
+DROP TABLE IF EXISTS recievingtable;
+DROP TABLE IF EXISTS salesordertable;
 
+DROP TABLE IF EXISTS supplierinformationtable;
 DROP TABLE IF EXISTS authenticationtable;
 DROP TABLE IF EXISTS productinformationtable;
 
-DROP TABLE IF EXISTS productinventorytable;
-DROP TABLE IF EXISTS recievingtable;
 
-DROP TABLE IF EXISTS salesordertable;
-DROP TABLE IF EXISTS supplierinformationtable;
+
 
 CREATE TABLE `authenticationtable` (
   `user_id` int(10) UNSIGNED NOT NULL,
@@ -85,7 +86,7 @@ CREATE TABLE `productinventorytable` (
   `product_id` int(11) DEFAULT NULL,
   `current_stock` int(11) NOT NULL,
   `max_stock_capacity` int(11) NOT NULL,
-  `date_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `date_time` timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -269,3 +270,5 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+ALTER TABLE productinventorytable  CHANGE date_time date_time TIMESTAMP on update CURRENT_TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;

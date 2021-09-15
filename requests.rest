@@ -1,4 +1,156 @@
+// START OF USER TESTS
+post http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "user_id" : 1,
+    "password" : "password"
+}
+
+###
+post http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "user_id" : 4,
+    "password" : "password"
+}
+
+###
 get http://localhost:3000/users
+
+###
+get http://localhost:3000/users/4
+
+###
+post http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "user_id": 4,
+    "first_name": "test",
+    "last_name": "user",
+    "admin": false,
+    "password": "password"
+}
+###
+delete http://localhost:3000/auth/logout
+
+###
+post http://localhost:3000/auth/token
+
+###
+patch http://localhost:3000/users/2
+Content-Type: application/json
+
+{
+  "user_id": 2,
+  "first_name": "updated",
+  "last_name": "super",
+  "admin": 1,
+  "password": "$2b$10$0ynj8tx05yxmrx6cFbhphOe1iKmxmrjOxR.Lw85IfI7wsQ.eDDf0G"
+}
+
+###
+delete http://localhost:3000/users/4
+
+// END OF USER TESTS
+
+// START OF SALES TESTS
+
+###
+get http://localhost:3000/sales
+
+###
+get http://localhost:3000/sales/1
+
+###
+patch http://localhost:3000/sales/1
+Content-Type: application/json
+
+{
+  "sales_id": 1,
+  "product_id": 2,
+  "quantity_sold": 80,
+  "date_time": "2021-09-13",
+  "dispatched": 1
+}
+
+###
+post http://localhost:3000/sales
+Content-Type: application/json
+
+{
+  "sales_id": 3,
+  "product_id": 2,
+  "quantity_sold": 100,
+  "date_time": "2021-10-13",
+  "dispatched": 1
+}
+
+###
+delete http://localhost:3000/sales/3
+
+// END OF SALES TESTS 
+
+// START PRODUCTS TESTS
+
+###
+get http://localhost:3000/products
+
+###
+get http://localhost:3000/products/1
+
+###
+patch http://localhost:3000/products/1
+Content-Type: application/json
+
+{
+  "product_id": 1,
+  "product_name": "patched med",
+  "product_group": "MedicineGroupTest1",
+  "product_description": "This is medicine",
+  "product_price": 4.99
+}
+
+###
+post http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "product_id": 5,
+  "product_name": "test med",
+  "product_group": "MedicineGroupTest1",
+  "product_description": "This is medicine",
+  "product_price": 4.99
+}
+
+###
+delete http://localhost:3000/products/5
+
+// END OF PRODUCTS TEST
+
+// START OF INVENTORY TEST
+
+###
+get http://localhost:3000/inventory
+
+// END OF INVENTORY TEST
+
+// START OF DELIVERY TEST
+
+###
+get http://localhost:3000/delivery
+
+// END OF DELIVERY 
+
+// START OF SUPPLIER TEST
+
+###
+get http://localhost:3000/supplier
+
+// END OF DELIVERY TEST
+
 
 ###
 post http://localhost:3000/auth/register
@@ -9,20 +161,6 @@ Content-Type: application/json
     "first_name": "test",
     "last_name": "user",
     "admin": true,
-    "password": "password"
-}
-
-//old request format (naked token)
-###
-post http://localhost:3000/auth/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMxMDMzODIyLCJleHAiOjE2MzEwMzQ3MjJ9.1qvm9z_OpZMOcsJFWSFtmObKU7NaMlZXHpYtjxg6eqk
-Content-Type: application/json
-
-{
-    "user_id": 3,
-    "firstName": "test",
-    "lastName": "user",
-    "admin": false,
     "password": "password"
 }
 
