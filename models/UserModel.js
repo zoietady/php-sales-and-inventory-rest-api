@@ -101,25 +101,24 @@ User.getAll = result => {
 };
 
 /* select all users */
-User.updateById = (id, User, result) => {
-  connection.query(
-    "UPDATE authenticationtable SET first_name = ?, last_name = ?, admin = ?, password = ? WHERE user_id = ?",
-    [ User.first_name, User.last_name, User.admin, User.password, User.user_id],
-    (err, res) => {
+User.updateById = (id, user, result) => {
+  connection.query( 'UPDATE authenticationtable SET ? WHERE user_id = ?',[user, id], (err, res) =>{
       if (err) {
         console.log("error: ", err);
         result(null, err);
-        return;
+        return; 
       }
 
       if (res.affectedRows == 0) {
         // not found User with the id
+        console.log('failed');
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("updated User: ", { id: id, ...User });
-      result(null, { id: id, ...User });
+      console.log('in call back');
+      console.log("updated User: ", { id: id, ...user });
+      result(null, { id: id, ...user });
     }
   );
 };

@@ -63,11 +63,8 @@ Delivery.getAll = result => {
 };
 
 /* select all Deliverys */
-Delivery.updateById = (id, Delivery, result) => {
-  connection.query(
-    "UPDATE recievingtable SET supplier_id = ?, product_id = ?, delivery_date = ?, product_price = ?, quantity = ?, arrived = ? WHERE recieving_id = ?",
-    [ Delivery.supplier_id, Delivery.product_id, Delivery.delivery_date, Delivery.product_price, Delivery.quantity, Delivery.arrived, Delivery.recieving_id],
-    (err, res) => {
+Delivery.updateById = (id, delivery, result) => {
+  connection.query( 'UPDATE recievingtable SET ? WHERE recieving_id = ?',[delivery, id], (err, res) =>{
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -80,8 +77,8 @@ Delivery.updateById = (id, Delivery, result) => {
         return;
       }
 
-      console.log("updated Delivery: ", { id: id, ...Delivery });
-      result(null, { id: id, ...Delivery });
+      console.log("updated Delivery: ", { id: id, ...delivery });
+      result(null, { id: id, ...delivery });
     }
   );
 };

@@ -105,19 +105,13 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
     }
 
     try{
-        /* parse user details */
-        const sale = { 
-            sales_id: req.body.sales_id,
-            product_id: req.body.product_id,
-            quantity_sold: req.body.quantity_sold,
-            date_time: req.body.date_time,
-            dispatched: req.body.dispatched
-        };
+        let sale = {};
 
-        console.log(req.params.id);
-        console.log(sales);
+        for (const name in req.body){
+            sale[name] = req.body[name];
+        }
 
-        Sales.updateById(req.params.id,new Sales(sale),(err, data) => {
+        Sales.updateById(req.params.id,sale,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({

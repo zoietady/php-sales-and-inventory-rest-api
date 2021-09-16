@@ -50,22 +50,23 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
     }
 
     try{
-        /* generate encryption salt */
-        const salt = await bcrypt.genSalt();
 
-        /* hash password */
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        let user = {};
 
-        /* parse user details */
-        const user = { 
-            user_id: req.body.user_id,
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            admin: req.body.admin,
-            password: hashedPassword
-        };
+        for (const name in req.body){
+            user[name] = req.body[name];
+        }
 
-        User.updateById(req.params.id,new User(user),(err, data) => {
+        if (user.hasOwnProperty("password")){
+            /* generate encryption salt */
+            const salt = await bcrypt.genSalt();
+
+            /* hash password */
+            user["password"] = await bcrypt.hash(req.body.password, salt);  
+        }
+        
+
+        User.updateById(req.params.id,user,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({

@@ -103,16 +103,13 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
     }
 
     try{
-        /* parse user details */
-        const inventory = { 
-            update_index: req.body.update_index,
-            product_id: req.body.product_id,
-            current_stock: req.body.current_stock,
-            max_stock_capacity: req.body.max_stock_capacity,
-            date_time: req.body.date_time
-        };
+        let inventory = {};
 
-        Inventory.updateById(req.params.id,new Inventory(inventory),(err, data) => {
+        for (const name in req.body){
+            inventory[name] = req.body[name];
+        }
+
+        Inventory.updateById(req.params.id,inventory,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({

@@ -61,11 +61,8 @@ Product.getAll = result => {
 };
 
 /* select all Products */
-Product.updateById = (id, Product, result) => {
-  connection.query(
-    "UPDATE productinformationtable SET product_name = ?, product_group = ?, product_description = ?, product_price = ? WHERE product_id = ?",
-    [ Product.product_name, Product.product_group, Product.product_description, Product.product_price, Product.product_id],
-    (err, res) => {
+Product.updateById = (id, product, result) => {
+  connection.query( 'UPDATE productinformationtable SET ? WHERE product_id = ?',[product, id], (err, res) =>{
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -78,8 +75,8 @@ Product.updateById = (id, Product, result) => {
         return;
       }
 
-      console.log("updated Product: ", { id: id, ...Product });
-      result(null, { id: id, ...Product });
+      console.log("updated Product: ", { id: id, ...product });
+      result(null, { id: id, ...product });
     }
   );
 };

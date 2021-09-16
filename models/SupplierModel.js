@@ -58,11 +58,8 @@ Supplier.getAll = result => {
 };
 
 /* select all Suppliers */
-Supplier.updateById = (id, Supplier, result) => {
-  connection.query(
-    "UPDATE supplierinformationtable SET supplier_name = ? WHERE Supplier_id = ?",
-    [ Supplier.supplier_id, Supplier.supplier_id],
-    (err, res) => {
+Supplier.updateById = (id, supplier, result) => {
+  connection.query( 'UPDATE supplierinformationtable SET ? WHERE supplier_id = ?',[supplier, id], (err, res) =>{
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -75,8 +72,8 @@ Supplier.updateById = (id, Supplier, result) => {
         return;
       }
 
-      console.log("updated Supplier: ", { id: id, ...Supplier });
-      result(null, { id: id, ...Supplier });
+      console.log("updated Supplier: ", { id: id, ...supplier });
+      result(null, { id: id, ...supplier });
     }
   );
 };

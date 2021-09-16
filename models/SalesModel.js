@@ -75,11 +75,8 @@ Sales.getAllBase = result => {
 };
 
 /* select all Saless */
-Sales.updateById = (id, Sales, result) => {
-  connection.query(
-    "UPDATE salesordertable SET product_id = ?, quantity_sold = ?, date_time = ?, dispatched = ? WHERE sales_id = ?",
-    [ Sales.product_id, Sales.quantity_sold, Sales.date_time, Sales.dispatched, Sales.sales_id],
-    (err, res) => {
+Sales.updateById = (id, sales, result) => {
+  connection.query( 'UPDATE salesordertable SET ? WHERE sales_id = ?',[sales, id], (err, res) =>{
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -92,8 +89,8 @@ Sales.updateById = (id, Sales, result) => {
         return;
       }
 
-      console.log("updated Sales: ", { id: id, ...Sales });
-      result(null, { id: id, ...Sales });
+      console.log("updated Sales: ", { id: id, ...sales });
+      result(null, { id: id, ...sales });
     }
   );
 };

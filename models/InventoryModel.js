@@ -75,11 +75,8 @@ Inventory.getAllBase = result => {
 };
 
 /* select all users */
-Inventory.updateById = (id, Inventory, result) => {
-  connection.query(
-    "UPDATE productinventorytable SET product_id = ?, current_stock = ?, max_stock_capacity = ?, date_time = ? WHERE update_index = ?",
-    [ Inventory.product_id, Inventory.current_stock, Inventory.max_stock_capacity, Inventory.date_time, Inventory.update_index],
-    (err, res) => {
+Inventory.updateById = (id, inventory, result) => {
+  connection.query( 'UPDATE productinventorytable SET ? WHERE update_index = ?',[inventory, id], (err, res) =>{
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -92,8 +89,8 @@ Inventory.updateById = (id, Inventory, result) => {
         return;
       }
 
-      console.log("updated Inventory: ", { id: id, ...Inventory });
-      result(null, { id: id, ...Inventory });
+      console.log("updated Inventory: ", { id: id, ...inventory });
+      result(null, { id: id, ...inventory });
     }
   );
 };

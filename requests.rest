@@ -12,8 +12,8 @@ post http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "user_id" : 4,
-    "password" : "password"
+    "user_id" : 2,
+    "password" : "password3"
 }
 
 ###
@@ -45,10 +45,20 @@ Content-Type: application/json
 
 {
   "user_id": 2,
-  "first_name": "updated",
+  "first_name": "updated2",
   "last_name": "super",
   "admin": 1,
-  "password": "$2b$10$0ynj8tx05yxmrx6cFbhphOe1iKmxmrjOxR.Lw85IfI7wsQ.eDDf0G"
+  "password": "password3"
+}
+
+###
+patch http://localhost:3000/users/2
+Content-Type: application/json
+
+{
+  "first_name": "helloupdate33",
+  "last_name": "super",
+  "password": "password2"
 }
 
 ###

@@ -99,13 +99,13 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
     }
 
     try{
-        /* parse user details */
-        const supplier = { 
-            supplier_id: req.body.supplier_id,
-            supplier_name: req.body.supplier_name
-        };
+        let supplier = {};
 
-        Supplier.updateById(req.params.id,new Supplier(supplier),(err, data) => {
+        for (const name in req.body){
+            supplier[name] = req.body[name];
+        }
+
+        Supplier.updateById(req.params.id,supplier,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
