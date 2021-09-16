@@ -19,17 +19,13 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
 
     try{
         /* parse user details */
-        const delivery = { 
-            recieving_id: req.body.recieving_id,
-            supplier_id: req.body.supplier_id,
-            product_id: req.body.product_id,
-            delivery_date: req.body.delivery_date,
-            product_price: req.body.product_price,
-            quantity: req.body.quantity,
-            arrived: req.body.arrived
-        };
+        let delivery = {};
 
-        Delivery.create(new Delivery(delivery),(err, data) => {
+        for (const name in req.body){
+            delivery[name] = req.body[name];
+        }
+
+        Delivery.create(delivery,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({

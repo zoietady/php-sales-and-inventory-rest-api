@@ -12,22 +12,21 @@ post http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "user_id" : 2,
-    "password" : "password3"
+    "user_id" : 5,
+    "password" : "password"
 }
 
 ###
 get http://localhost:3000/users
 
 ###
-get http://localhost:3000/users/4
+get http://localhost:3000/users/5
 
 ###
 post http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "user_id": 4,
     "first_name": "test",
     "last_name": "user",
     "admin": false,
@@ -45,7 +44,7 @@ Content-Type: application/json
 
 {
   "user_id": 2,
-  "first_name": "updated2",
+  "first_name": "simple update",
   "last_name": "super",
   "admin": 1,
   "password": "password3"
@@ -56,7 +55,7 @@ patch http://localhost:3000/users/2
 Content-Type: application/json
 
 {
-  "first_name": "helloupdate33",
+  "first_name": "multiuse update route",
   "last_name": "super",
   "password": "password2"
 }
@@ -81,9 +80,17 @@ Content-Type: application/json
 {
   "sales_id": 1,
   "product_id": 2,
-  "quantity_sold": 80,
+  "quantity_sold": 800,
   "date_time": "2021-09-13",
   "dispatched": 1
+}
+
+###
+patch http://localhost:3000/sales/1
+Content-Type: application/json
+
+{
+  "quantity_sold": 90
 }
 
 ###
@@ -91,7 +98,6 @@ post http://localhost:3000/sales
 Content-Type: application/json
 
 {
-  "sales_id": 3,
   "product_id": 2,
   "quantity_sold": 100,
   "date_time": "2021-10-13",
@@ -117,10 +123,19 @@ Content-Type: application/json
 
 {
   "product_id": 1,
-  "product_name": "patched med",
+  "product_name": "patched med2",
   "product_group": "MedicineGroupTest1",
   "product_description": "This is medicine",
   "product_price": 4.99
+}
+
+###
+patch http://localhost:3000/products/1
+Content-Type: application/json
+
+{
+  "product_name": "patched med4 rout",
+  "product_group": "MedicineGroupTest1"
 }
 
 ###
@@ -128,7 +143,6 @@ post http://localhost:3000/products
 Content-Type: application/json
 
 {
-  "product_id": 5,
   "product_name": "test med",
   "product_group": "MedicineGroupTest1",
   "product_description": "This is medicine",
@@ -145,12 +159,91 @@ delete http://localhost:3000/products/5
 ###
 get http://localhost:3000/inventory
 
+###
+get http://localhost:3000/inventory/1
+
+###
+patch http://localhost:3000/inventory/2
+Content-Type: application/json
+
+{
+  "product_id": 2,
+  "current_stock": 50,
+  "max_stock_capacity": 0,
+  "date_time": "2021-09-14"
+}
+
+###
+patch http://localhost:3000/inventory/2
+Content-Type: application/json
+
+{
+  "current_stock": 50,
+  "max_stock_capacity": 1000
+}
+
+###
+post http://localhost:3000/inventory
+Content-Type: application/json
+
+{
+  "product_id": 3,
+  "current_stock": 500,
+  "max_stock_capacity": 1000,
+  "date_time": "2021-09-14"
+}
+
+###
+delete http://localhost:3000/inventory/4
+
 // END OF INVENTORY TEST
 
 // START OF DELIVERY TEST
 
 ###
 get http://localhost:3000/delivery
+
+###
+get http://localhost:3000/delivery/3
+
+###
+patch http://localhost:3000/delivery/3
+Content-Type: application/json
+
+{
+  "recieving_id": 3,
+  "supplier_id": 1,
+  "product_id": 2,
+  "delivery_date": "2021-09-13",
+  "product_price": 1.25,
+  "quantity": 2000,
+  "arrived": 1
+}
+
+###
+patch http://localhost:3000/delivery/3
+Content-Type: application/json
+
+{
+  "quantity": 1000,
+  "arrived": 0
+}
+
+###
+post http://localhost:3000/delivery
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "product_id": 2,
+  "delivery_date": "2021-09-13",
+  "product_price": 12.25,
+  "quantity": 8888,
+  "arrived": 1
+}
+
+###
+delete http://localhost:3000/delivery/5
 
 // END OF DELIVERY 
 
@@ -159,106 +252,36 @@ get http://localhost:3000/delivery
 ###
 get http://localhost:3000/supplier
 
-// END OF DELIVERY TEST
-
+###
+get http://localhost:3000/supplier/1
 
 ###
-post http://localhost:3000/auth/register
+patch http://localhost:3000/supplier/1
 Content-Type: application/json
 
 {
-    "user_id": 4,
-    "first_name": "test",
-    "last_name": "user",
-    "admin": true,
-    "password": "password"
+  "supplier_id": 1,
+  "supplier_name": "potato"
 }
 
-//new request format (in cookie token)
 ###
-post http://localhost:3000/auth/login
+patch http://localhost:3000/supplier/1
 Content-Type: application/json
 
 {
-    "user_id" : 1,
-    "password" : "password"
+  "supplier_name": "potato2"
 }
 
 ###
-delete http://localhost:3000/auth/logout
-
-###
-post http://localhost:3000/auth/token
-
-###
-post http://localhost:3000/sales/
+post http://localhost:3000/supplier
 Content-Type: application/json
 
 {
-    "sales_id": 3,
-    "date_time": "2021-01-20", 
-    "product_id": 0,
-    "product_name": "test product 1",
-    "product_group": "product group 1",
-    "quantity_sold": 50,
-    "product_sales_value": 5000
+  "supplier_name": "potato4"
 }
 
 ###
-post http://localhost:3000/inventory/
-Content-Type: application/json
+delete http://localhost:3000/supplier/3
 
-{
-    "product_id": 2,
-    "product_name": "test product 1",
-    "product_group": "product group 1",
-    "max_stock_capacity": 100,
-    "current_stock": 50,
-    "product_description":"just a test product that is number 1",
-    "product_price": 12.99
-}
-
-
-###
-get http://localhost:3000/products
-
-###
-get http://localhost:3000/users/
-
-###
-patch http://localhost:3000/products/2
-Content-Type: application/json
-
-{
-    "product_id": 2,
-    "product_name": "MedicineTest1",
-    "product_group": "MedicineGroupTest1",
-    "product_description": "This is medicine",
-    "product_price": 10.99
-}
-
-###
-get http://localhost:3000/sales/
-
-###
-get http://localhost:3000/inventory/
-
-###
-delete http://localhost:3000/products/2
-
-###
-get http://localhost:3000/inventory/00000
-
-
-###
-get http://localhost:3000/users
-
-
-###
-get http://localhost:3000/sales
-
-
-###
-get http://localhost:3000/inventory
-
-
+// END OF SUPPLIER TEST
+// END OF TESTS

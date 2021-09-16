@@ -46,24 +46,33 @@ router.post('/register', [authMiddleware.authenticateTokenCookie, authMiddleware
         return res.status(400).send({ message: "Content can not be empty!"});
     }
 
+    /* check for body content */
+    if (!req.body.first_name) {
+        return res.status(400).send({ message: "missing value"});
+    }
+
+    if (req.body.admin === null) {
+        return res.status(400).send({ message: "missing value"});
+    }
+
+    if (!req.body.password) {
+        return res.status(400).send({ message: "missing value"});
+    }
+
     try{
-        /* generate encryption salt */
-        const salt = await bcrypt.genSalt();
+        let user = {};
 
-        /* hash password */
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        for (const name in req.body){
+            user[name] = req.body[name];
+        }
 
-        /* parse user details */
-        const user = { 
-            user_id: req.body.user_id,
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            admin: req.body.admin,
-            password: hashedPassword
-        };
+        if (user.hasOwnProperty("password")){
+            /* generate encryption salt */
+            const salt = await bcrypt.genSalt();
 
-        /* store user */
-        users.push(user);
+            /* hash password */
+            user["password"] = await bcrypt.hash(req.body.password, salt);  
+        }
 
         /* save user to database */
         User.create(user, (err, data) => {

@@ -19,15 +19,13 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
 
     try{
         /* parse user details */
-        const product = { 
-            product_id: req.body.product_id,
-            product_name: req.body.product_name,
-            product_group: req.body.product_group,
-            product_description: req.body.product_description,
-            product_price: req.body.product_price
-        };
+        let product = {};
 
-        Product.create(new Product(product),(err, data) => {
+        for (const name in req.body){
+            product[name] = req.body[name];
+        }
+
+        Product.create(product,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({

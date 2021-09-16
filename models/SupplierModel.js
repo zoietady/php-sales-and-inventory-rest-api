@@ -4,9 +4,9 @@
 const connection = require("./db.js");
 
 /* instantiate Supplier model */
-const Supplier = function(Supplier) {
-  this.supplier_id = Supplier.Supplier_id;
-  this.supplier_name = Supplier.product_id;
+const Supplier = function(supplier) {
+  this.supplier_id = supplier.supplier_id;
+  this.supplier_name = supplier.supplier_name;
 };
 
 /* register/create Supplier */

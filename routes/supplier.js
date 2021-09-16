@@ -18,12 +18,12 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
 
     try{
         /* parse user details */
-        const supplier = { 
+        let supplier = { 
             supplier_id: req.body.supplier_id,
             supplier_name: req.body.supplier_name
         };
 
-        Supplier.create(new Supplier(supplier),(err, data) => {
+        Supplier.create(supplier,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
