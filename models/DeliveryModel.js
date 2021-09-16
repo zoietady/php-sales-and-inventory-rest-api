@@ -23,8 +23,8 @@ Delivery.create = (newDelivery, result) => {
       return;
     }
 
-    console.log("created Delivery: ", { id: res.insertId, ...newDelivery });
-    result(null, { id: res.insertId, ...newDelivery });
+    console.log("created Delivery: ", { recieving_id: res.insertId, ...newDelivery });
+    result(null, { recieving_id: res.insertId, ...newDelivery });
   });
 };
 
@@ -77,8 +77,8 @@ Delivery.updateById = (id, delivery, result) => {
         return;
       }
 
-      console.log("updated Delivery: ", { id: id, ...delivery });
-      result(null, { id: id, ...delivery });
+      console.log("updated Delivery: ", { recieving_id: id, ...delivery });
+      result(null, { recieving_id: id, ...delivery });
     }
   );
 };

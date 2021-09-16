@@ -21,8 +21,8 @@ Product.create = (newProduct, result) => {
       return;
     }
 
-    console.log("created Product: ", { id: res.insertId, ...newProduct });
-    result(null, { id: res.insertId, ...newProduct });
+    console.log("created Product: ", { product_id: res.insertId, ...newProduct });
+    result(null, { product_id: res.insertId, ...newProduct });
   });
 };
 
@@ -75,8 +75,8 @@ Product.updateById = (id, product, result) => {
         return;
       }
 
-      console.log("updated Product: ", { id: id, ...product });
-      result(null, { id: id, ...product });
+      console.log("updated Product: ", { product_id: id, ...product });
+      result(null, { product_id: id, ...product });
     }
   );
 };

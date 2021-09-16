@@ -21,8 +21,8 @@ Sales.create = (newSales, result) => {
       return;
     }
 
-    console.log("created Sales: ", { id: res.insertId, ...newSales });
-    result(null, { id: res.insertId, ...newSales });
+    console.log("created Sales: ", { sales_id: res.insertId, ...newSales });
+    result(null, { sales_id: res.insertId, ...newSales });
   });
 };
 
@@ -89,8 +89,8 @@ Sales.updateById = (id, sales, result) => {
         return;
       }
 
-      console.log("updated Sales: ", { id: id, ...sales });
-      result(null, { id: id, ...sales });
+      console.log("updated Sales: ", { sales_id: id, ...sales });
+      result(null, { sales_id: id, ...sales });
     }
   );
 };

@@ -21,8 +21,8 @@ User.create = (newUser, result) => {
       return;
     }
 
-    console.log("created User: ", { id: res.insertId, ...newUser });
-    result(null, { id: res.insertId, ...newUser });
+    console.log("created User: ", { user_id: res.insertId, ...newUser });
+    result(null, { user_id: res.insertId, ...newUser });
   });
 };
 
@@ -117,8 +117,8 @@ User.updateById = (id, user, result) => {
       }
 
       console.log('in call back');
-      console.log("updated User: ", { id: id, ...user });
-      result(null, { id: id, ...user });
+      console.log("updated User: ", { user_id: id, ...user });
+      result(null, { user_id: id, ...user });
     }
   );
 };

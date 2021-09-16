@@ -17,9 +17,9 @@ Supplier.create = (newSupplier, result) => {
       result(err, null);
       return;
     }
-
-    console.log("created Supplier: ", { id: res.insertId, ...newSupplier });
-    result(null, { id: res.insertId, ...newSupplier });
+    console.log(res.insertId);
+    console.log("created Supplier: ", { supplier_id: res.insertId, ...newSupplier });
+    result(null, { supplier_id: res.insertId, ...newSupplier });
   });
 };
 
@@ -72,8 +72,8 @@ Supplier.updateById = (id, supplier, result) => {
         return;
       }
 
-      console.log("updated Supplier: ", { id: id, ...supplier });
-      result(null, { id: id, ...supplier });
+      console.log("updated Supplier: ", { supplier_id: id, ...supplier });
+      result(null, { supplier_id: id, ...supplier });
     }
   );
 };

@@ -1,4 +1,7 @@
+// Note edit and delete routes required admin. Get all users require admins
+// All routes require token ("credentials: same/origin") except for login.
 // START OF USER TESTS
+// login user
 post http://localhost:3000/auth/login
 Content-Type: application/json
 
@@ -7,6 +10,7 @@ Content-Type: application/json
     "password" : "password"
 }
 
+// login user
 ###
 post http://localhost:3000/auth/login
 Content-Type: application/json
@@ -16,9 +20,18 @@ Content-Type: application/json
     "password" : "password"
 }
 
+// get users
 ###
 get http://localhost:3000/users
 
+###
+get http://localhost:3000/admin
+
+###
+get http://localhost:3000/admin/1
+
+
+// get user
 ###
 get http://localhost:3000/users/5
 
@@ -27,6 +40,7 @@ post http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
+    "user_id": 7,
     "first_name": "test",
     "last_name": "user",
     "admin": false,
@@ -98,14 +112,14 @@ post http://localhost:3000/sales
 Content-Type: application/json
 
 {
-  "product_id": 2,
+  "product_id": 1,
   "quantity_sold": 100,
   "date_time": "2021-10-13",
   "dispatched": 1
 }
 
 ###
-delete http://localhost:3000/sales/3
+delete http://localhost:3000/sales/8
 
 // END OF SALES TESTS 
 
@@ -143,6 +157,7 @@ post http://localhost:3000/products
 Content-Type: application/json
 
 {
+  "product_id": 10,
   "product_name": "test med",
   "product_group": "MedicineGroupTest1",
   "product_description": "This is medicine",
@@ -150,7 +165,7 @@ Content-Type: application/json
 }
 
 ###
-delete http://localhost:3000/products/5
+delete http://localhost:3000/products/10
 
 // END OF PRODUCTS TEST
 
@@ -194,7 +209,7 @@ Content-Type: application/json
 }
 
 ###
-delete http://localhost:3000/inventory/4
+delete http://localhost:3000/inventory/2
 
 // END OF INVENTORY TEST
 
@@ -243,7 +258,7 @@ Content-Type: application/json
 }
 
 ###
-delete http://localhost:3000/delivery/5
+delete http://localhost:3000/delivery/7
 
 // END OF DELIVERY 
 

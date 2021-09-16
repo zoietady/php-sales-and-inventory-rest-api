@@ -21,14 +21,14 @@ Inventory.create = (newRecord, result) => {
       return;
     }
 
-    console.log("created Inventory: ", { id: res.insertId, ...newRecord });
-    result(null, { id: res.insertId, ...newRecord });
+    console.log("created Inventory: ", { update_index: res.insertId, ...newRecord });
+    result(null, { update_index: res.insertId, ...newRecord });
   });
 };
 
 /* select user by id */
-Inventory.findById = (user_id, result) => {
-  connection.query(`SELECT * FROM productinventorytable WHERE update_index = ${user_id}`, (err, res) => {
+Inventory.findById = (id, result) => {
+  connection.query(`SELECT * FROM productinventorytable WHERE update_index = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -89,8 +89,8 @@ Inventory.updateById = (id, inventory, result) => {
         return;
       }
 
-      console.log("updated Inventory: ", { id: id, ...inventory });
-      result(null, { id: id, ...inventory });
+      console.log("updated Inventory: ", { update_index: id, ...inventory });
+      result(null, { update_index: id, ...inventory });
     }
   );
 };
