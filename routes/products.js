@@ -4,12 +4,12 @@ const router = express.Router();
 /* import auth middlewares */
 const authMiddleware = require("../middlewares/authMiddleware");
 
+/* import user model */
+const Product = require("../models/ProductModel.js");
+
 /* in memory data storage */
 let data = require("../data.js");
-let inventory = data.inventory;
-
-/* import user model */
-const Inventory = require("../models/InventoryModel.js");
+let sales = data.sales;
 
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
     /* check for body content */
@@ -19,21 +19,21 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
 
     try{
         /* parse user details */
-        let inventory = {};
+        let product = {};
 
         for (const name in req.body){
-            inventory[name] = req.body[name];
+            product[name] = req.body[name];
         }
 
-        Inventory.create(inventory,(err, data) => {
+        Product.create(product,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
-                            message: `Not found Inventory with id ${req.params.id}.`
+                            message: `Not found product with id ${req.params.id}.`
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating Inventory with id " + req.params.id
+                            message: "Error updating product with id " + req.params.id
                         });
                     }
                 } else res.send(data);
@@ -47,11 +47,11 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
 
 /* get all sales*/
 router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
-    Inventory.getAll((err, data) => {
+    Product.getAll((err, data) => {
         if (err)
           res.status(500).send({
             message:
-              err.message || "Some error occurred while retrieving Inventorys."
+              err.message || "Some error occurred while retrieving products."
           });
         else res.send(data);
     });
@@ -59,15 +59,15 @@ router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
 
 /* update a sales record (user restricted) */
 router.get('/:id', [authMiddleware.authenticateTokenCookie], (req, res)=>{
-    Inventory.findById(req.params.id, (err, data) => {
+    Product.findById(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Inventory with id ${req.params.id}.`
+                    message: `Not found product with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Inventory with id " + req.params.id
+                    message: "Error retrieving product with id " + req.params.id
                 });
             }
         } else res.send(data);
@@ -77,18 +77,18 @@ router.get('/:id', [authMiddleware.authenticateTokenCookie], (req, res)=>{
 /* delete a sales record (admin restricted) */
 router.delete('/:id', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], (req, res)=>{
    
-    Inventory.remove(req.params.id, (err, data) => {
+    Product.remove(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Not found Inventory with id ${req.params.id}.`
+              message: `Not found product with id ${req.params.id}.`
             });
           } else {
             res.status(500).send({
-              message: "Could not delete Inventory with id " + req.params.id
+              message: "Could not delete product with id " + req.params.id
             });
           }
-        } else res.send({ message: `Inventory was deleted successfully!` });
+        } else res.send({ message: `product was deleted successfully!` });
     });
 });
 
@@ -101,21 +101,21 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
     }
 
     try{
-        let inventory = {};
+        let product = {};
 
         for (const name in req.body){
-            inventory[name] = req.body[name];
+            product[name] = req.body[name];
         }
 
-        Inventory.updateById(req.params.id,inventory,(err, data) => {
+        Product.updateById(req.params.id,product,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
-                            message: `Not found Inventory with id ${req.params.id}.`
+                            message: `Not found product with id ${req.params.id}.`
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating Inventory with id " + req.params.id
+                            message: "Error updating product with id " + req.params.id
                         });
                     }
                 } else res.send(data);

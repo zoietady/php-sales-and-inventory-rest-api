@@ -1,33 +1,7 @@
-get http://localhost:3000/users
-
-###
-post http://localhost:3000/auth/register
-Content-Type: application/json
-
-{
-    "user_id": 3,
-    "firstName": "test",
-    "lastName": "user",
-    "admin": false,
-    "password": "password"
-}
-
-//old request format (naked token)
-###
-post http://localhost:3000/auth/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMxMDMzODIyLCJleHAiOjE2MzEwMzQ3MjJ9.1qvm9z_OpZMOcsJFWSFtmObKU7NaMlZXHpYtjxg6eqk
-Content-Type: application/json
-
-{
-    "user_id": 3,
-    "firstName": "test",
-    "lastName": "user",
-    "admin": false,
-    "password": "password"
-}
-
-//new request format (in cookie token)
-###
+// Note edit and delete routes required admin. Get all users require admins
+// All routes require token ("credentials: same/origin") except for login.
+// START OF USER TESTS
+// login user
 post http://localhost:3000/auth/login
 Content-Type: application/json
 
@@ -36,6 +10,42 @@ Content-Type: application/json
     "password" : "password"
 }
 
+// login user
+###
+post http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "user_id" : 5,
+    "password" : "password"
+}
+
+// get users
+###
+get http://localhost:3000/users
+
+###
+get http://localhost:3000/admin
+
+###
+get http://localhost:3000/admin/1
+
+
+// get user
+###
+get http://localhost:3000/users/5
+
+###
+post http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "user_id": 7,
+    "first_name": "test",
+    "last_name": "user",
+    "admin": false,
+    "password": "password"
+}
 ###
 delete http://localhost:3000/auth/logout
 
@@ -43,62 +53,250 @@ delete http://localhost:3000/auth/logout
 post http://localhost:3000/auth/token
 
 ###
-post http://localhost:3000/sales/
+patch http://localhost:3000/users/2
 Content-Type: application/json
 
 {
-    "sales_id": 3,
-    "date_time": "2021-01-20", 
-    "product_id": 0,
-    "product_name": "test product 1",
-    "product_group": "product group 1",
-    "quantity_sold": 50,
-    "product_sales_value": 5000
+  "user_id": 2,
+  "first_name": "simple update",
+  "last_name": "super",
+  "admin": 1,
+  "password": "password3"
 }
 
 ###
-post http://localhost:3000/inventory/
+patch http://localhost:3000/users/2
 Content-Type: application/json
 
 {
-    "product_id": 2,
-    "product_name": "test product 1",
-    "product_group": "product group 1",
-    "max_stock_capacity": 100,
-    "current_stock": 50,
-    "product_description":"just a test product that is number 1",
-    "product_price": 12.99
+  "first_name": "multiuse update route",
+  "last_name": "super",
+  "password": "password2"
 }
 
-
 ###
-get http://localhost:3000/admin
+delete http://localhost:3000/users/4
 
-###
-get http://localhost:3000/users/3
+// END OF USER TESTS
 
-###
-get http://localhost:3000/sales/
-
-###
-get http://localhost:3000/inventory/
-
-###
-delete http://localhost:3000/sales/1
-
-###
-get http://localhost:3000/inventory/00000
-
-
-###
-get http://localhost:3000/users
-
+// START OF SALES TESTS
 
 ###
 get http://localhost:3000/sales
 
+###
+get http://localhost:3000/sales/1
+
+###
+patch http://localhost:3000/sales/1
+Content-Type: application/json
+
+{
+  "sales_id": 1,
+  "product_id": 2,
+  "quantity_sold": 800,
+  "date_time": "2021-09-13",
+  "dispatched": 1
+}
+
+###
+patch http://localhost:3000/sales/1
+Content-Type: application/json
+
+{
+  "quantity_sold": 90
+}
+
+###
+post http://localhost:3000/sales
+Content-Type: application/json
+
+{
+  "product_id": 1,
+  "quantity_sold": 100,
+  "date_time": "2021-10-13",
+  "dispatched": 1
+}
+
+###
+delete http://localhost:3000/sales/8
+
+// END OF SALES TESTS 
+
+// START PRODUCTS TESTS
+
+###
+get http://localhost:3000/products
+
+###
+get http://localhost:3000/products/1
+
+###
+patch http://localhost:3000/products/1
+Content-Type: application/json
+
+{
+  "product_id": 1,
+  "product_name": "patched med2",
+  "product_group": "MedicineGroupTest1",
+  "product_description": "This is medicine",
+  "product_price": 4.99
+}
+
+###
+patch http://localhost:3000/products/1
+Content-Type: application/json
+
+{
+  "product_name": "patched med4 rout",
+  "product_group": "MedicineGroupTest1"
+}
+
+###
+post http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "product_id": 10,
+  "product_name": "test med",
+  "product_group": "MedicineGroupTest1",
+  "product_description": "This is medicine",
+  "product_price": 4.99
+}
+
+###
+delete http://localhost:3000/products/10
+
+// END OF PRODUCTS TEST
+
+// START OF INVENTORY TEST
 
 ###
 get http://localhost:3000/inventory
 
+###
+get http://localhost:3000/inventory/1
 
+###
+patch http://localhost:3000/inventory/2
+Content-Type: application/json
+
+{
+  "product_id": 2,
+  "current_stock": 50,
+  "max_stock_capacity": 0,
+  "date_time": "2021-09-14"
+}
+
+###
+patch http://localhost:3000/inventory/2
+Content-Type: application/json
+
+{
+  "current_stock": 50,
+  "max_stock_capacity": 1000
+}
+
+###
+post http://localhost:3000/inventory
+Content-Type: application/json
+
+{
+  "product_id": 3,
+  "current_stock": 500,
+  "max_stock_capacity": 1000,
+  "date_time": "2021-09-14"
+}
+
+###
+delete http://localhost:3000/inventory/2
+
+// END OF INVENTORY TEST
+
+// START OF DELIVERY TEST
+
+###
+get http://localhost:3000/delivery
+
+###
+get http://localhost:3000/delivery/3
+
+###
+patch http://localhost:3000/delivery/3
+Content-Type: application/json
+
+{
+  "recieving_id": 3,
+  "supplier_id": 1,
+  "product_id": 2,
+  "delivery_date": "2021-09-13",
+  "product_price": 1.25,
+  "quantity": 2000,
+  "arrived": 1
+}
+
+###
+patch http://localhost:3000/delivery/3
+Content-Type: application/json
+
+{
+  "quantity": 1000,
+  "arrived": 0
+}
+
+###
+post http://localhost:3000/delivery
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "product_id": 2,
+  "delivery_date": "2021-09-13",
+  "product_price": 12.25,
+  "quantity": 8888,
+  "arrived": 1
+}
+
+###
+delete http://localhost:3000/delivery/7
+
+// END OF DELIVERY 
+
+// START OF SUPPLIER TEST
+
+###
+get http://localhost:3000/supplier
+
+###
+get http://localhost:3000/supplier/1
+
+###
+patch http://localhost:3000/supplier/1
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "supplier_name": "potato"
+}
+
+###
+patch http://localhost:3000/supplier/1
+Content-Type: application/json
+
+{
+  "supplier_name": "potato2"
+}
+
+###
+post http://localhost:3000/supplier
+Content-Type: application/json
+
+{
+  "supplier_name": "potato4"
+}
+
+###
+delete http://localhost:3000/supplier/3
+
+// END OF SUPPLIER TEST
+// END OF TESTS

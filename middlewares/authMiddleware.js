@@ -57,13 +57,13 @@ module.exports = {
         if (req.user.user_id === parseInt(req.params.id)) {
           next();
         } else{
-          if (req.user.admin !== true) return res.sendStatus(401);
+          if (req.user.admin !== 1) return res.sendStatus(401);
           next();
         }
       },
     authenticateAdminToken: function(req, res, next) {
       /* check if token sender is admin */
-      if (req.user.admin !== true) return res.sendStatus(401);
+      if (req.user.admin !== 1) return res.sendStatus(401);
       next();
     }
 };

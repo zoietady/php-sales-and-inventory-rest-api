@@ -4,12 +4,11 @@ const router = express.Router();
 /* import auth middlewares */
 const authMiddleware = require("../middlewares/authMiddleware");
 
+/* import user model */
+const Supplier = require("../models/SupplierModel.js");
+
 /* in memory data storage */
 let data = require("../data.js");
-let inventory = data.inventory;
-
-/* import user model */
-const Inventory = require("../models/InventoryModel.js");
 
 router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
     /* check for body content */
@@ -19,21 +18,20 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
 
     try{
         /* parse user details */
-        let inventory = {};
+        let supplier = { 
+            supplier_id: req.body.supplier_id,
+            supplier_name: req.body.supplier_name
+        };
 
-        for (const name in req.body){
-            inventory[name] = req.body[name];
-        }
-
-        Inventory.create(inventory,(err, data) => {
+        Supplier.create(supplier,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
-                            message: `Not found Inventory with id ${req.params.id}.`
+                            message: `Not found Supplier with id ${req.params.id}.`
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating Inventory with id " + req.params.id
+                            message: "Error updating Supplier with id " + req.params.id
                         });
                     }
                 } else res.send(data);
@@ -45,55 +43,55 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
     };
 });
 
-/* get all sales*/
+/* get all Supplier*/
 router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
-    Inventory.getAll((err, data) => {
+    Supplier.getAll((err, data) => {
         if (err)
           res.status(500).send({
             message:
-              err.message || "Some error occurred while retrieving Inventorys."
+              err.message || "Some error occurred while retrieving Suppliers."
           });
         else res.send(data);
     });
 });
 
-/* update a sales record (user restricted) */
+/* update a Supplier record (user restricted) */
 router.get('/:id', [authMiddleware.authenticateTokenCookie], (req, res)=>{
-    Inventory.findById(req.params.id, (err, data) => {
+    Supplier.findById(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Inventory with id ${req.params.id}.`
+                    message: `Not found Supplier with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Inventory with id " + req.params.id
+                    message: "Error retrieving Supplier with id " + req.params.id
                 });
             }
         } else res.send(data);
     });
 });
 
-/* delete a sales record (admin restricted) */
+/* delete a Supplier record (admin restricted) */
 router.delete('/:id', [authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], (req, res)=>{
    
-    Inventory.remove(req.params.id, (err, data) => {
+    Supplier.remove(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Not found Inventory with id ${req.params.id}.`
+              message: `Not found Supplier with id ${req.params.id}.`
             });
           } else {
             res.status(500).send({
-              message: "Could not delete Inventory with id " + req.params.id
+              message: "Could not delete Supplier with id " + req.params.id
             });
           }
-        } else res.send({ message: `Inventory was deleted successfully!` });
+        } else res.send({ message: `Supplier was deleted successfully!` });
     });
 });
 
 /* update user is self or admin restricted */
-router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.authenticateAdminToken], async (req, res)=>{
+router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.authenticateSelfRequest], async (req, res)=>{
     
     /* check for body content */
     if (!req.body) {
@@ -101,21 +99,21 @@ router.patch('/:id',[authMiddleware.authenticateTokenCookie, authMiddleware.auth
     }
 
     try{
-        let inventory = {};
+        let supplier = {};
 
         for (const name in req.body){
-            inventory[name] = req.body[name];
+            supplier[name] = req.body[name];
         }
 
-        Inventory.updateById(req.params.id,inventory,(err, data) => {
+        Supplier.updateById(req.params.id,supplier,(err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
-                            message: `Not found Inventory with id ${req.params.id}.`
+                            message: `Not found Supplier with id ${req.params.id}.`
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating Inventory with id " + req.params.id
+                            message: "Error updating Supplier with id " + req.params.id
                         });
                     }
                 } else res.send(data);
