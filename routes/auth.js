@@ -92,8 +92,9 @@ router.post('/register', [authMiddleware.authenticateTokenCookie, authMiddleware
 
 /* login user */
 router.post('/login',async (req, res) => {
-    let queryString = 'SELECT * FROM authenticationTable WHERE user_id = ?';
+    let queryString = 'SELECT * FROM authenticationtable WHERE user_id = ?';
     const queryResult = await new Promise(resolve => connection.query(queryString, req.body.user_id, (error, result) => resolve(result)));
+    console.log(queryResult);
 
     let user = queryResult[0];
 
