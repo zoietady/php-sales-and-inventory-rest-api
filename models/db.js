@@ -1,13 +1,13 @@
 /* import drivers and connection configuration */
 const mysql = require("mysql");
-const dbConfig = require("../config/dbconfig.js");
+// const dbConfig = require("../config/dbconfig.js");
 
 /* create connection instance */
 let connection = mysql.createPool({
-  host: dbConfig.HOST,
-  user: dbConfig.USER,
-  password: dbConfig.PASSWORD,
-  database: dbConfig.DB
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DB
 });
 
 connection.getConnection(function(err) {
