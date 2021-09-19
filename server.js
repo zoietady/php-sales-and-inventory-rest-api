@@ -1,4 +1,7 @@
-require('dotenv').config()
+  
+if (process.env.NODE_ENV !== 'production'){
+    require('dotenv').config();
+}
 
 const express = require('express');
 const app = express();
@@ -32,4 +35,4 @@ app.use('/supplier',supplierRouter);
 app.use('/delivery',deliveryRouter);
 
 
-app.listen(3000, () => console.log(`server started`))
+app.listen(process.env.PORT || 5000, () => console.log(`server started`))
