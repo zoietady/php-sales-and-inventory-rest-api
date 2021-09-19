@@ -18,6 +18,9 @@ const productsRouter = require('./routes/products');
 const supplierRouter = require('./routes/supplier');
 const deliveryRouter = require('./routes/delivery');
 
+app.get("/", (req,res)=>{
+    res.send("Sales and inventory system api");
+});
 
 app.use('/auth',authRouter);
 app.use('/users',userRouter);
