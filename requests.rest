@@ -2,7 +2,7 @@
 // All routes require token ("credentials: same/origin") except for login.
 // START OF USER TESTS
 // login user
-post http://localhost:3000/auth/login
+https://sisrestapi.herokuapp.com/
 Content-Type: application/json
 
 {
