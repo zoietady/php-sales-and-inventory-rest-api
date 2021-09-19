@@ -48,7 +48,7 @@ Sales.findById = (Sales_id, result) => {
 
 /* select all Saless */
 Sales.getAll = result => {
-  connection.query("SELECT sales_id,productInformationTable.*,quantity_sold,date_time,dispatched, ROUND(quantity_sold * product_price, 2) AS 'total_revenue' FROM productInformationTable, salesOrderTable WHERE productInformationTable.product_id = salesOrderTable.product_id ORDER BY product_id;", (err, res) => {
+  connection.query("SELECT sales_id,productinformationtable.*,quantity_sold,date_time,dispatched, ROUND(quantity_sold * product_price, 2) AS 'total_revenue' FROM productInformationTable, salesordertable WHERE productInformationTable.product_id = salesOrderTable.product_id ORDER BY product_id;", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
