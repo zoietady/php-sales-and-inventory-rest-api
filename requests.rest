@@ -82,7 +82,7 @@ delete http://localhost:3000/users/4
 // START OF SALES TESTS
 
 ###
-get http://localhost:3000/sales
+get http://localhost:5000/sales
 
 ###
 get http://localhost:3000/sales/1
