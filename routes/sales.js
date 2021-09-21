@@ -45,6 +45,48 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
     };
 });
 
+router.post('/many', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
+    /* check for body content */
+    if (!req.body) {
+        return res.status(400).send({ message: "Content can not be empty!"});
+    }
+
+    try{
+        /* parse user details */
+        let salesList = [];
+        let sale;
+
+        for (var i in req.body){
+            sale = [];
+            for (const name in req.body[i]){
+                sale.push(req.body[i][name]);
+            }
+            salesList.push(sale);
+        }
+
+        console.log(salesList);
+        
+        Sales.createMany(salesList,(err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found Sales with id ${req.params.id}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating Sales with id " + req.params.id
+                        });
+                    }
+                } else res.send(data);
+            }
+        );
+    } catch{
+        /* send 500 for failed process */
+        return res.status(500).send("error in registration");
+    };
+});
+
+
 /* get all sales*/
 router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
     Sales.getAll((err, data) => {

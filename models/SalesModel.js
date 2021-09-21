@@ -26,6 +26,21 @@ Sales.create = (newSales, result) => {
   });
 };
 
+/* register/create Sales */
+Sales.createMany = (newSalesList, result) => {
+  console.log(newSalesList);
+  connection.query("INSERT INTO salesordertable (product_id, quantity_sold, date_time, dispatched) VALUES ?", [newSalesList], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log("List of sales record inserted ");
+    result(null, { sales_id: res.insertId });
+  });
+};
+
 /* select Sales by id */
 Sales.findById = (Sales_id, result) => {
   connection.query(`SELECT * FROM salesordertable WHERE sales_id = ${Sales_id}`, (err, res) => {
