@@ -122,8 +122,8 @@ router.post('/login',async (req, res) => {
             refreshTokens.push(refreshToken);
 
             /* send json response containing token */
-            res.cookie("access_token", accessToken,{httpOnly: true})
-                .cookie("refresh_token", refreshToken, {httpOnly: true})
+            res.cookie("access_token", accessToken,{httpOnly: true, sameSite: 'None', secure: true})
+                .cookie("refresh_token", refreshToken, {httpOnly: true,  sameSite: 'None', secure: true})
                 .json({ user_id: user.user_id,admin: user.admin, expires_in: "15min" })
                 .status(200);
 
