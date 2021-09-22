@@ -3,7 +3,7 @@ module.exports = {
     generateAccessToken: function (user) {
         /* sign access token */
         
-        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15min' });
+        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
     },
     generateRefreshToken: function (user) {
         /* sign refresh token */
