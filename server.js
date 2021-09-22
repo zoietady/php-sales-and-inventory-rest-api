@@ -6,13 +6,17 @@ if (process.env.NODE_ENV !== 'production'){
 const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
-const cors = require('cors');
+// const cors = require('cors');
 
 const data = require("./data.js");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/users');
