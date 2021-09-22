@@ -12,17 +12,17 @@ Content-Type: application/json
 
 // login user
 ###
-post http://localhost:3000/auth/login
+post http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "user_id" : 5,
-    "password" : "password"
+    "user_id" : 2,
+    "password" : "passwordnew"
 }
 
 // get users
 ###
-get http://localhost:3000/users
+get http://localhost:5000/users
 
 ###
 get http://localhost:3000/admin
@@ -53,7 +53,7 @@ delete http://localhost:3000/auth/logout
 post http://localhost:3000/auth/token
 
 ###
-patch http://localhost:3000/users/2
+patch http://localhost:5000/users/2
 Content-Type: application/json
 
 {
@@ -61,7 +61,7 @@ Content-Type: application/json
   "first_name": "simple update",
   "last_name": "super",
   "admin": 1,
-  "password": "password3"
+  "password": "passwordnew"
 }
 
 ###

@@ -6,11 +6,13 @@ if (process.env.NODE_ENV !== 'production'){
 const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
+const cors = require('cors');
 
 const data = require("./data.js");
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/users');
