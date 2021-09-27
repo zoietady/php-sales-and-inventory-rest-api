@@ -29,11 +29,11 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
-                            message: `Not found Delivery with id .`
+                            message: `Not found Delivery with id ${req.params.id}.`
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating Delivery with id "
+                            message: "Error updating Delivery with id " + req.params.id
                         });
                     }
                 } else res.send(data);
