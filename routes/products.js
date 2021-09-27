@@ -33,7 +33,7 @@ router.post('/', [authMiddleware.authenticateTokenCookie] ,async (req, res)=>{
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating product with id " + req.params.id
+                            message: "Error adding new product"
                         });
                     }
                 } else res.send(data);
