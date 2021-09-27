@@ -48,7 +48,7 @@ Inventory.findById = (id, result) => {
 
 /* select all users */
 Inventory.getAll = result => {
-  connection.query("SELECT productInformationTable.*, update_index, current_stock,max_stock_capacity, date_time FROM productinformationtable, productinventorytable WHERE productinformationtable.product_id = productinventorytable.product_id GROUP BY product_id;", (err, res) => {
+  connection.query("SELECT productInformationtable.*, update_index, current_stock,max_stock_capacity, date_time FROM productinformationtable, productinventorytable WHERE productinformationtable.product_id = productinventorytable.product_id GROUP BY product_id;", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
