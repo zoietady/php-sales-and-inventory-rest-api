@@ -39,6 +39,7 @@ const salesRouter = require('./routes/sales');
 const productsRouter = require('./routes/products');
 const supplierRouter = require('./routes/supplier');
 const deliveryRouter = require('./routes/delivery');
+const reportRouter = require('./routes/report');
 
 app.get("/", (req,res)=>{
     res.send("Sales and inventory system api");
@@ -52,7 +53,8 @@ app.use('/sales',salesRouter);
 app.use('/products',productsRouter);
 app.use('/supplier',supplierRouter);
 app.use('/delivery',deliveryRouter);
+app.use('/report',reportRouter);
 
 
-app.listen(process.env.PORT || 5000, () => console.log(`server started`));
+app.listen(process.env.PORT || 3000, () => console.log(`server started`));
 

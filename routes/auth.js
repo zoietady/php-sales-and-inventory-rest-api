@@ -87,19 +87,15 @@ router.post('/register', [authMiddleware.authenticateTokenCookie, authMiddleware
         /* send 500 for failed process */
         return res.status(500).send("error in registration");
     };
-    
 });
 
 /* login user */
 router.post('/login',async (req, res) => {
     let queryString = 'SELECT * FROM authenticationtable WHERE user_id = ?';
     const queryResult = await new Promise(resolve => connection.query(queryString, req.body.user_id, (error, result) => resolve(result)));
-    console.log(queryResult);
 
     let user = queryResult[0];
 
-    console.log(user);
-    
     /* if user is not registered return 400 */
     if (user == null) {
         return res.status(404).send('cannot find user')
