@@ -86,16 +86,16 @@ router.post('/many', [authMiddleware.authenticateTokenCookie] ,async (req, res)=
     };
 });
 
-
+// [authMiddleware.authenticateTokenCookie]
 /* get all sales*/
-router.get('/', [authMiddleware.authenticateTokenCookie],(req, res)=>{
+router.get('/',[authMiddleware.authenticateTokenCookie],(req, res)=>{
     Sales.getAll((err, data) => {
         if (err)
           res.status(500).send({
             message:
               err.message || "Some error occurred while retrieving Saless."
           });
-        else res.send(data);
+        else res.send(data.slice(0, 50));
     });
 });
 
