@@ -95,7 +95,7 @@ router.get('/',[authMiddleware.authenticateTokenCookie],(req, res)=>{
             message:
               err.message || "Some error occurred while retrieving Saless."
           });
-        else res.send(data.slice(0, 50));
+        else res.send(data);
     });
 });
 
