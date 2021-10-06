@@ -17,5 +17,10 @@ router.get('/',[authMiddleware.authenticateTokenCookie],(req, res)=>{
     res.json(report);
 });
 
+router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+    res.json({"summary": "This is a sample summary report of roughly the same length: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse "});
+});
+
+
 
 module.exports = router;
