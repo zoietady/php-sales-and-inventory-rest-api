@@ -51,6 +51,6 @@ group by week(date_time),year(date_time)
 order by start_of_week;
 
 
-SELECT productinventorytable.product_id, productinventorytable.current_stock, productinventorytable.date_time from productinventorytable,(SELECT product_id, current_stock, max(date_time) as latestUpdateDate from productinventorytable GROUP BY product_id) max_product WHERE productinventorytable.product_id = max_product.product_id AND productinventorytable.date_time = max_product.latestUpdateDate;
+SELECT productinventorytable.product_id, productinventorytable.current_stock, date_format(productinventorytable.date_time, "%d-%m-%y") as "date_time" from productinventorytable,(SELECT product_id, current_stock, max(date_time) as latestUpdateDate from productinventorytable GROUP BY product_id) max_product WHERE productinventorytable.product_id = max_product.product_id AND productinventorytable.date_time = max_product.latestUpdateDate;
 
-SELECT sales_id,productinformationtable.*,quantity_sold,date_time,dispatched, ROUND(quantity_sold * product_price, 2) AS 'total_revenue' FROM productinformationtable, salesordertable WHERE productinformationtable.product_id = salesordertable.product_id ORDER BY sales_id;
+SELECT sales_id,productinformationtable.*,quantity_sold,date_format(date_time, "%d-%m-%y") as date_time,dispatched, ROUND(quantity_sold * product_price, 2) AS 'total_revenue' FROM productinformationtable, salesordertable WHERE productinformationtable.product_id = salesordertable.product_id ORDER BY sales_id;
