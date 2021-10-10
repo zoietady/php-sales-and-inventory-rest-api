@@ -14,7 +14,31 @@ Content-Type: application/json
 get http://localhost:3000/report
 
 ###
+get http://localhost:3000/report/product
+
+###
+get http://localhost:3000/sales/weekly
+
+###
+get http://localhost:3000/sales/monthly
+
+###
+get http://localhost:3000/sales/product/weekly
+
+###
+get http://localhost:3000/sales/productcategory/monthly
+
+###
+get http://localhost:3000/sales/productcategory/weekly
+
+###
+get http://localhost:3000/sales/product/monthly
+
+###
 get http://localhost:3000/products
+
+###
+get http://localhost:3000/inventory
 
 ###
 get http://localhost:3000/report/summary

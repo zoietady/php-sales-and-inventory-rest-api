@@ -98,6 +98,72 @@ router.get('/',[authMiddleware.authenticateTokenCookie],(req, res)=>{
         else res.send(data);
     });
 });
+// ,[authMiddleware.authenticateTokenCookie]
+router.get('/monthly',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+    Sales.getMonthlySales((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Saless."
+          });
+        else res.send(data);
+    });
+});
+
+router.get('/weekly',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+    Sales.getWeeklySales((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Saless."
+          });
+        else res.send(data);
+    });
+});
+
+router.get('/product/weekly',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+    Sales.getProductWeekly((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Saless."
+          });
+        else res.send(data);
+    });
+});
+
+router.get('/product/monthly',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+    Sales.getProductMonthly((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Saless."
+          });
+        else res.send(data);
+    });
+});
+
+router.get('/productcategory/weekly',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+    Sales.getProductCategoryWeekly((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Saless."
+          });
+        else res.send(data);
+    });
+});
+
+router.get('/productcategory/monthly',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+    Sales.getProductCategoryMonthly((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Saless."
+          });
+        else res.send(data);
+    });
+});
 
 /* update a sales record (user restricted) */
 router.get('/:id', [authMiddleware.authenticateTokenCookie], (req, res)=>{
