@@ -64,5 +64,30 @@ Report.getProductCategorySalesData = result => {
   });
 };
 
+Report.getSalesData = result => {
+  let query1 = `select month(date_time) as "month",year(date_time) as "year",sum(ROUND(quantity_sold * productinformationtable.product_price, 2)) as "sales_revenue", sum(quantity_sold) as "volume_sold"
+  from productinformationtable, salesordertable 
+  where productinformationtable.product_id = salesordertable.product_id
+  group by month(date_time),year(date_time)
+  order by year(date_time),month(date_time)`
+
+  let query2 = `select date_format(MIN(date_time), "%d-%m-%y") as "start_of_week",WEEK(date_time) as "week",sum(ROUND(quantity_sold * productinformationtable.product_price, 2)) as "sales_revenue", sum(quantity_sold) as "volume_sold"
+  from productinformationtable, salesordertable 
+  where productinformationtable.product_id = salesordertable.product_id
+  group by week(date_time),year(date_time)
+  order by start_of_week`
+
+  let queryString = query1.concat(";", query2)
+  connection.query(queryString, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    result(null, res);
+  });
+};
+
 
 module.exports = Report;
