@@ -20,7 +20,7 @@ router.get('/',[authMiddleware.authenticateTokenCookie],(req, res)=>{
     res.json(report);
 });
 
-router.get('/product',(req, res)=>{
+router.get('/product',[authMiddleware.authenticateTokenCookie],(req, res)=>{
     Report.getProductSalesData((err, data) => {
         if (err)
           res.status(500).send({
@@ -145,7 +145,107 @@ router.get('/product',(req, res)=>{
                 }
             })
 
-            console.log(result)
+            res.json(result)
+        };
+    });
+});
+
+
+router.get('/productcategory',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+    Report.getProductCategorySalesData((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving Saless."
+          });
+        else {
+
+            let monthly = []
+            let weekly = []
+            let result = []
+
+            var today = new Date();
+            var month = today.getMonth();
+            var year = today.getFullYear();
+
+            var oneJan = new Date(today.getFullYear(),0,1);
+            var numberOfDays = Math.floor((today - oneJan) / (24 * 60 * 60 * 1000));
+            var week = Math.ceil(( today.getDay() + 1 + numberOfDays) / 7);
+
+            monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
+
+            weekly = data[1].filter(e => (e.week === week && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-1 && (new Date(e.start_of_week)).getFullYear() === year))
+
+            var product
+
+            monthly.forEach((i) =>{
+                if (result.findIndex(x => x.product_group==i.product_group) === -1){
+                    product = { 
+                        "product_group": i.product_group,
+                        "previous_month_revenue" : i.sales_revenue,
+                        "previous_month_volume" : i.volume_sold,
+                    }
+                    result.push(product);
+                } else {
+                    product["current_month_revenue"] =  i.sales_revenue,
+                    product["current_month_volume"] =  i.volume_sold
+                }
+            })
+
+            var index
+            weekly.forEach((i) =>{
+                index = result.findIndex(x => x.product_group=== i.product_group)
+                if (index !== -1){
+                    if ( !result[index].hasOwnProperty('previous_week_revenue')) {
+                        result[index].previous_week_revenue =  i.sales_revenue,
+                        result[index].previous_week_volume =  i.volume_sold
+                    } else{
+                        result[index].current_week_revenue =  i.sales_revenue,
+                        result[index].current_week_volume =  i.volume_sold
+                    }
+                } 
+            }) 
+
+            var second_rate_change = 0.5
+            var revenue_change,volume_change
+            result.forEach((i) => {
+                revenue_change = {
+                    "1w": (i.current_week_revenue - i.previous_week_revenue)/i.previous_week_revenue,
+                    "1m": (i.current_month_revenue - i.previous_month_revenue)/i.previous_month_revenue
+                }
+
+                volume_change = {
+                    "1w": (i.current_week_volume - i.previous_week_volume)/i.previous_week_volume,
+                    "1m": (i.current_month_volume - i.previous_month_volume)/i.previous_month_volume
+                }
+
+                forecasted_revenue_change = {
+                    "1w": ((i.current_week_revenue - i.previous_week_revenue)/i.previous_week_revenue)*second_rate_change,
+                    "1m": ((i.current_month_revenue - i.previous_month_revenue)/i.previous_month_revenue)*second_rate_change
+                }
+
+                forecasted_revenue = {
+                    "1w": ((((i.current_week_revenue - i.previous_week_revenue)/i.previous_week_revenue)*second_rate_change)+1)*i.current_week_revenue,
+                    "1m": ((((i.current_month_revenue - i.previous_month_revenue)/i.previous_month_revenue)*second_rate_change)+1)*i.current_month_revenue
+                }
+
+                forecasted_volume_change = {
+                    "1w": ((i.current_week_volume - i.previous_week_volume)/i.previous_week_volume)*second_rate_change,
+                    "1m": ((i.current_month_volume - i.previous_month_volume)/i.previous_month_volume)*second_rate_change
+                }
+
+                forecasted_volume = {
+                    "1w": ((((i.current_week_volume - i.previous_week_volume)/i.previous_week_volume)*second_rate_change)+1)*i.current_week_volume,
+                    "1m": ((((i.current_month_volume - i.previous_month_volume)/i.previous_month_volume)*second_rate_change)+1)*i.current_month_volume
+                }
+
+                i.revenue_change = revenue_change
+                i.volume_change = volume_change
+                i.forecasted_revenue_change = forecasted_revenue_change
+                i.forecasted_revenue = forecasted_revenue
+                i.forecasted_volume_change = forecasted_revenue_change
+                i.forecasted_volume = forecasted_volume
+            });
 
             res.json(result)
         };
