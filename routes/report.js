@@ -252,7 +252,7 @@ router.get('/productcategory',[authMiddleware.authenticateTokenCookie],(req, res
     });
 });
 
-router.get('/summary',(req, res)=>{
+router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
     Report.getSalesData((err, data) => {
         if (err)
           res.status(500).send({
