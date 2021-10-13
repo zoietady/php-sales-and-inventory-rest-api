@@ -43,7 +43,7 @@ router.get('/product',[authMiddleware.authenticateTokenCookie],(req, res)=>{
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-1 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter(e => (e.week === week - 1 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year))
 
             var product
 
@@ -174,7 +174,7 @@ router.get('/productcategory',[authMiddleware.authenticateTokenCookie],(req, res
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-1 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter(e => (e.week === week-1 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year))
 
             var product
 
@@ -252,7 +252,7 @@ router.get('/productcategory',[authMiddleware.authenticateTokenCookie],(req, res
     });
 });
 
-router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
+router.get('/summary',(req, res)=>{
     Report.getSalesData((err, data) => {
         if (err)
           res.status(500).send({
@@ -274,7 +274,7 @@ router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-1 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter(e => (e.week === week-1 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year))
 
             var summary_data = {
                 "previous_month_sales" : monthly[0].sales_revenue,
@@ -308,8 +308,6 @@ router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
             } else{
                 summary += ` sales were the same from last month. `
             }
-
-            console.log(summary);
 
             res.json({"summary": summary});
         };
