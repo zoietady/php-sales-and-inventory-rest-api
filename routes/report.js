@@ -130,7 +130,7 @@ router.get('/product',[authMiddleware.authenticateTokenCookie],(req, res)=>{
                         "last_update":inventory[index].date_time,
                         "current_stock":inventory[index].current_stock,
                         "1w_deficit": inventory[index].current_stock - i.forecasted_volume["1w"],
-                        "1m_deficit":  inventory[index].current_stock - i.forecasted_volume["1w"]
+                        "1m_deficit":  inventory[index].current_stock - i.forecasted_volume["1m"]
                     }
 
                     i.inventory_comparison = inventory_comparison
