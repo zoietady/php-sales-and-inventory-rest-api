@@ -46,7 +46,7 @@ Report.getProductCategorySalesData = result => {
   group by productinformationtable.product_group,month(date_time),year(date_time)
   order by productinformationtable.product_group,year(date_time),month(date_time)`
 
-  let query2 = `select productinformationtable.product_group,MIN(date_time) as "start_of_week",WEEK(date_time) as "week", sum(ROUND(quantity_sold * productinformationtable.product_price, 2)) as "sales_revenue", sum(quantity_sold) as "volume_sold"
+  let query2 = `select productinformationtable.product_group,date_format(MIN(date_time),"%d-%m-%y") as "start_of_week",WEEK(date_time) as "week", sum(ROUND(quantity_sold * productinformationtable.product_price, 2)) as "sales_revenue", sum(quantity_sold) as "volume_sold"
   from productinformationtable, salesordertable 
   where productinformationtable.product_id = salesordertable.product_id
   group by productinformationtable.product_group,WEEK(date_time),year(date_time) 
