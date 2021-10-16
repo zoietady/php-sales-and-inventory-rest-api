@@ -43,7 +43,7 @@ router.get('/product',[authMiddleware.authenticateTokenCookie],(req, res)=>{
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week - 1 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter(e => (e.week === week - 2 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-3 && (new Date(e.start_of_week)).getFullYear() === year))
 
             var product
 
@@ -174,7 +174,7 @@ router.get('/productcategory',[authMiddleware.authenticateTokenCookie],(req, res
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week-1 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter(e => (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-3 && (new Date(e.start_of_week)).getFullYear() === year))
 
             var product
 
@@ -252,6 +252,7 @@ router.get('/productcategory',[authMiddleware.authenticateTokenCookie],(req, res
     });
 });
 
+// ,[authMiddleware.authenticateTokenCookie]
 router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
     Report.getSalesData((err, data) => {
         if (err)
@@ -274,7 +275,8 @@ router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week-1 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter(e => (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-3 && (new Date(e.start_of_week)).getFullYear() === year))
+
 
             var summary_data = {
                 "previous_month_sales" : monthly[0].sales_revenue,

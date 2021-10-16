@@ -75,7 +75,7 @@ Report.getSalesData = result => {
   from productinformationtable, salesordertable 
   where productinformationtable.product_id = salesordertable.product_id
   group by week(date_time),year(date_time)
-  order by start_of_week`
+  order by date_time`
 
   let queryString = query1.concat(";", query2)
   connection.query(queryString, (err, res) => {
