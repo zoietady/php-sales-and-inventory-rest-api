@@ -43,7 +43,13 @@ router.get('/product',[authMiddleware.authenticateTokenCookie],(req, res)=>{
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week - 2 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-3 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter((e) => {
+                var dateParts = e.start_of_week.split("-");
+                var new_date = new Date("20"+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
+                console.log(new_date);
+
+                return (e.week === week-1 && new_date.getFullYear() === year) || (e.week === week-2 && new_date.getFullYear() === year)
+            });
 
             var product
 
@@ -174,7 +180,13 @@ router.get('/productcategory',[authMiddleware.authenticateTokenCookie],(req, res
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-3 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter((e) => {
+                var dateParts = e.start_of_week.split("-");
+                var new_date = new Date("20"+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
+                console.log(new_date);
+
+                return (e.week === week-1 && new_date.getFullYear() === year) || (e.week === week-2 && new_date.getFullYear() === year)
+            });
 
             var product
 
@@ -275,9 +287,14 @@ router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
 
             monthly = data[0].filter(e => (e.month === month+1 && e.year === year) || (e.month === month && e.year === year))
 
-            weekly = data[1].filter(e => (e.week === week-2 && (new Date(e.start_of_week)).getFullYear() === year) || (e.week === week-3 && (new Date(e.start_of_week)).getFullYear() === year))
+            weekly = data[1].filter((e) => {
+                var dateParts = e.start_of_week.split("-");
+                var new_date = new Date("20"+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
+                console.log(new_date);
 
-
+                return (e.week === week-1 && new_date.getFullYear() === year) || (e.week === week-2 && new_date.getFullYear() === year)
+            });
+            
             var summary_data = {
                 "previous_month_sales" : monthly[0].sales_revenue,
                 "current_month_sales" : monthly[1].sales_revenue,
