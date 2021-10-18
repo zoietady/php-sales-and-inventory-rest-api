@@ -48,7 +48,7 @@ router.get('/product',[authMiddleware.authenticateTokenCookie],(req, res)=>{
                 var new_date = new Date("20"+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
                 console.log(new_date);
 
-                return (e.week === week-1 && new_date.getFullYear() === year) || (e.week === week-2 && new_date.getFullYear() === year)
+                return (e.week === week && new_date.getFullYear() === year) || (e.week === week-1 && new_date.getFullYear() === year)
             });
 
             var product
@@ -185,7 +185,7 @@ router.get('/productcategory',[authMiddleware.authenticateTokenCookie],(req, res
                 var new_date = new Date("20"+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
                 console.log(new_date);
 
-                return (e.week === week-1 && new_date.getFullYear() === year) || (e.week === week-2 && new_date.getFullYear() === year)
+                return (e.week === week && new_date.getFullYear() === year) || (e.week === week-1 && new_date.getFullYear() === year)
             });
 
             var product
@@ -292,7 +292,7 @@ router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
                 var new_date = new Date("20"+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
                 console.log(new_date);
 
-                return (e.week === week-1 && new_date.getFullYear() === year) || (e.week === week-2 && new_date.getFullYear() === year)
+                return (e.week === week && new_date.getFullYear() === year) || (e.week === week-1 && new_date.getFullYear() === year)
             });
             
             var summary_data = {
@@ -306,7 +306,7 @@ router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
                 "percent_weekly_sales_change" : (weekly[1].sales_revenue - weekly[0].sales_revenue)/weekly[0].sales_revenue
             }
 
-            var summary = `It is currently week ${weekly[1].week}, which started on ${weekly[1].start_of_week}. `
+            var summary = `It is currently week ${weekly[1].week} (started on ${weekly[1].start_of_week}). `
 
             if (summary_data.weekly_sales_change > 0){
                 summary += `Sales have increased by ${summary_data.weekly_sales_change.toFixed(2)} or ${summary_data.percent_weekly_sales_change.toFixed(2) * 100}% from last week, increasing from ${weekly[0].sales_revenue.toFixed(2)} to ${weekly[1].sales_revenue.toFixed(2)}. `
