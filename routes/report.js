@@ -309,7 +309,7 @@ router.get('/summary',[authMiddleware.authenticateTokenCookie],(req, res)=>{
             var summary = `It is currently week ${weekly[1].week} (started on ${weekly[1].start_of_week}). `
 
             if (summary_data.weekly_sales_change > 0){
-                summary += `Sales have increased by ${summary_data.weekly_sales_change.toFixed(2)} or ${summary_data.percent_weekly_sales_change.toFixed(2) * 100}% from last week, increasing from ${weekly[0].sales_revenue.toFixed(2)} to ${weekly[1].sales_revenue.toFixed(2)}. `
+                summary += `Sales have increased by A$${summary_data.weekly_sales_change.toFixed(2)} or ${summary_data.percent_weekly_sales_change.toFixed(2) * 100}% from last week, increasing from A$${weekly[0].sales_revenue.toFixed(2)} to  A$${weekly[1].sales_revenue.toFixed(2)}. `
             } else if (summary_data.weekly_sales_change < 0){
                 summary += `Sales have decreased by A$${summary_data.weekly_sales_change.toFixed(2)*-1} or ${summary_data.percent_weekly_sales_change.toFixed(2) * -100}% from last week, dropping from A$${weekly[0].sales_revenue.toFixed(2)} to A$${weekly[1].sales_revenue.toFixed(2)}. `
             } else{
